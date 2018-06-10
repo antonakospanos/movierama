@@ -1,0 +1,10 @@
+Version: ${pom.version}-${git.commit.id.abbrev}
+Revision: ${git.commit.id}
+Branch: ${git.branch}
+Tag: ${git.tags}
+Commit Time: ${git.commit.time}
+Build Time: ${git.build.time}
+
+Commit User Name: ${git.commit.user.title}
+Commit User Email: ${git.commit.user.email}
+Commit Message: ${git.commit.message.full}

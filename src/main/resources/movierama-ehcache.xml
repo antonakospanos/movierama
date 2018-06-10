@@ -1,0 +1,19 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+		 monitoring="autodetect" dynamicConfig="true" name="movierama-cache">
+
+	<diskStore path="java.io.tmpdir/movierama-cache"/>
+
+	<defaultCache maxElementsInMemory="10000" eternal="false" overflowToDisk="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600">
+		<cacheEventListenerFactory class="org.antonakospanos.movierama.support.ehcache.LoggingCacheListenerFactory"/>
+	</defaultCache>
+
+	<!-- DB Entities -->
+	<cache name="org.hibernate.cache.internal.StandardQueryCache" maxElementsInMemory="10000" eternal="false" overflowToDisk="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600">
+		<cacheEventListenerFactory class="org.antonakospanos.movierama.support.ehcache.LoggingCacheListenerFactory"/>
+	</cache>
+
+	<cache name="movierama.entity-cache" maxElementsInMemory="10000" eternal="false" overflowToDisk="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600">
+		<cacheEventListenerFactory class="org.antonakospanos.movierama.support.ehcache.LoggingCacheListenerFactory"/>
+	</cache>
+</ehcache>
