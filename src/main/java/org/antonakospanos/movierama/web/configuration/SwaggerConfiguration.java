@@ -63,7 +63,7 @@ public class SwaggerConfiguration {
 	}
 
 	private Predicate<String> apiV1Paths() {
-		return or(regex("/(users|movies).*"));
+		return or(regex("/(users|movies|votes).*"));
 	}
 
 	private Predicate<String> apiV2Paths() {

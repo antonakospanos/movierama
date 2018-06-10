@@ -4,7 +4,6 @@ import org.antonakospanos.movierama.dao.model.Movie;
 import org.antonakospanos.movierama.dao.repository.MovieRepository;
 import org.antonakospanos.movierama.web.dto.movies.MovieBaseDto;
 import org.antonakospanos.movierama.web.dto.movies.MovieDto;
-import org.antonakospanos.movierama.web.dto.patch.PatchDto;
 import org.antonakospanos.movierama.web.dto.response.CreateResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,41 +46,6 @@ public class MovieService {
     }
 
     @Transactional
-    public CreateResponseData update(UUID externalId, List<PatchDto> patches) {
-        validateMovie(externalId);
-        Movie movie = movieRepository.findByExternalId(externalId);
-
-        return update(movie, patches);
-    }
-
-    @Transactional
-    public CreateResponseData update(Movie movie, List<PatchDto> patches) {
-        patches.stream().forEach(patchDto -> {
-            // Update Movie in DB
-//            movieConverter.updateMovie(patchDto, movie);
-        });
-
-        movieRepository.save(movie);
-
-        logger.info("Movie updated: " + movie);
-
-        return new CreateResponseData(movie.getExternalId().toString());
-    }
-
-    @Transactional
-    public MovieDto find(UUID externalId) {
-        MovieDto movieDto = null;
-        validateMovie(externalId);
-
-        if (externalId != null) {
-            Movie movie = movieRepository.findByExternalId(externalId);
-            movieDto = new MovieDto().fromEntity(movie);
-        }
-
-        return movieDto;
-    }
-
-    @Transactional
     public List<MovieDto> list(UUID userId) {
         List<MovieDto> movieDtos;
 
@@ -100,16 +64,5 @@ public class MovieService {
         }
 
         return movieDtos;
-    }
-
-    // ************************ Validations ************************ //
-    @Transactional
-    public void validateMovie(UUID externalId) {
-        if (externalId != null) {
-            Movie movie = movieRepository.findByExternalId(externalId);
-            if (movie == null) {
-                throw new IllegalArgumentException("Movie '" + externalId + "' does not exist!");
-            }
-        }
     }
 }

@@ -1,10 +1,11 @@
 package org.antonakospanos.movierama.web.support;
 
 import org.antonakospanos.movierama.web.configuration.SecurityConfiguration;
-import org.antonakospanos.movierama.web.configuration.SecurityConfiguration;
+import org.antonakospanos.movierama.web.security.exception.MovieRamaAuthenticationException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 public class SecurityHelper {
 
@@ -41,5 +42,32 @@ public class SecurityHelper {
         }
 
         return result;
+    }
+
+    /**
+     * Parses the HTTP Authorization header and returns, if found, the user's access token
+     *
+     * @param authorizationHeader
+     * @return The UUID access-token
+     */
+    public static UUID getAccessToken(String authorizationHeader) {
+        String token = StringUtils.substringAfter(authorizationHeader, "Bearer ");
+        return convertAccessToken(token);
+    }
+
+    /**
+     * Converts the parsed access-token, from HTTP Authorization header, to UUID
+     *
+     * @param token
+     * @return The UUID access-token
+     */
+    public static UUID convertAccessToken(String token) {
+        UUID accessToken;
+        try {
+            accessToken = UUID.fromString(token);
+        } catch (Exception e) {
+            throw new MovieRamaAuthenticationException("Invalid HTTP Authorization header Bearer: " + token);
+        }
+        return accessToken;
     }
 }

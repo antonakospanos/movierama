@@ -1,14 +1,12 @@
 package org.antonakospanos.movierama.web.api.v1;
 
 import io.swagger.annotations.*;
-import org.antonakospanos.movierama.service.MovieService;
-import org.antonakospanos.movierama.support.ControllerUtils;
+import org.antonakospanos.movierama.service.VoteService;
 import org.antonakospanos.movierama.support.LoggingHelper;
 import org.antonakospanos.movierama.web.api.BaseMovieRamaController;
-import org.antonakospanos.movierama.web.dto.movies.MovieBaseDto;
-import org.antonakospanos.movierama.web.dto.movies.MovieDto;
 import org.antonakospanos.movierama.web.dto.response.CreateResponse;
 import org.antonakospanos.movierama.web.dto.response.ResponseBase;
+import org.antonakospanos.movierama.web.dto.votes.VoteDto;
 import org.antonakospanos.movierama.web.enums.Result;
 import org.antonakospanos.movierama.web.support.SecurityHelper;
 import org.slf4j.Logger;
@@ -19,21 +17,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Api(value = "Movie API", tags = "Movies", position = 1, description = "Movie Management")
-@RequestMapping(value = "/movies")
-public class MovieController extends BaseMovieRamaController {
+@Api(value = "Vote API", tags = "Votes", position = 3, description = "Vote Management")
+@RequestMapping(value = "/votes")
+public class VoteController extends BaseMovieRamaController {
 
-    private final static Logger logger = LoggerFactory.getLogger(MovieController.class);
+    private final static Logger logger = LoggerFactory.getLogger(VoteController.class);
 
     @Autowired
-    MovieService service;
+    VoteService service;
 
     @RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"}, method = RequestMethod.POST)
-    @ApiOperation(value = "Creates the movie", response = CreateResponse.class)
+    @ApiOperation(value = "Adds a positive or negative vote to the movie", response = CreateResponse.class)
     @ApiImplicitParam(
             name = "Authorization",
             value = "Bearer <The user's access token obtained upon registration or authentication>",
@@ -44,30 +41,17 @@ public class MovieController extends BaseMovieRamaController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "The movie is created!", response = ResponseBase.class),
+            @ApiResponse(code = 201, message = "The vote is added!", response = ResponseBase.class),
             @ApiResponse(code = 400, message = "The request is invalid!"),
             @ApiResponse(code = 500, message = "server error")})
-    public ResponseEntity<ResponseBase> create(@RequestHeader(value = "Authorization") String authorization, @Valid @RequestBody MovieBaseDto movieBaseDto) {
+    public ResponseEntity<ResponseBase> create(@RequestHeader(value = "Authorization") String authorization, @Valid @RequestBody VoteDto voteDto) throws Exception {
         ResponseEntity<ResponseBase> response;
-        logger.debug(LoggingHelper.logInboundRequest(movieBaseDto));
+        logger.debug(LoggingHelper.logInboundRequest(voteDto));
 
         UUID accessToken = SecurityHelper.getAccessToken(authorization);
-        service.create(accessToken, movieBaseDto);
+        service.create(accessToken, voteDto);
         ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
         response = ResponseEntity.status(HttpStatus.CREATED).body(responseBase);
-
-        logger.debug(LoggingHelper.logInboundResponse(response));
-
-        return response;
-    }
-
-    @ApiOperation(value = "Lists all the movies", response = MovieDto.class, responseContainer = "List")
-    @RequestMapping(value = "", produces = {"application/json"}, method = RequestMethod.GET)
-    public ResponseEntity<Iterable> listMovies(@RequestParam (required = false) UUID userId) {
-
-        logger.debug(LoggingHelper.logInboundRequest("/movies"));
-        List<MovieDto> movies = service.list(userId);
-        ResponseEntity<Iterable> response = ControllerUtils.listResources(movies);
 
         logger.debug(LoggingHelper.logInboundResponse(response));
 

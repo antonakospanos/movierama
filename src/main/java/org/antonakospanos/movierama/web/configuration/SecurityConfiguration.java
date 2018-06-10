@@ -33,9 +33,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String USERS_API = "/users/**";
 	private static final String MOVIES_API = "/movies/**";
+	private static final String VOTES_API = "/votes/**";
 
 	private static final String[] ADMIN_API = {"/admin/**"};
-	private static final String[] FRONTEND_API = { MOVIES_API, USERS_API};
+	private static final String[] FRONTEND_API = { MOVIES_API, USERS_API, VOTES_API};
 
 	public static final String ROLE_GUEST = "ROLE_GUEST";
 	public static final String ROLE_USER = "ROLE_USER";

@@ -8,7 +8,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Cacheable
@@ -121,5 +123,21 @@ public class Movie implements Serializable {
 
 	public void setHaters(Set<User> haters) {
 		this.haters = haters;
+	}
+
+	public void addFan(User user) {
+		if (this.fans == null) {
+			this.fans = new HashSet<>();
+		}
+
+		this.fans.add(user);
+	}
+
+	public void addHater(User user) {
+		if (this.haters == null) {
+			this.haters = new HashSet<>();
+		}
+
+		this.haters.add(user);
 	}
 }

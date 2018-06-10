@@ -4,6 +4,7 @@ import org.antonakospanos.movierama.dao.model.User;
 import org.antonakospanos.movierama.service.UserService;
 import org.antonakospanos.movierama.web.configuration.SecurityConfiguration;
 import org.antonakospanos.movierama.web.security.exception.MovieRamaAuthenticationException;
+import org.antonakospanos.movierama.web.support.SecurityHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,14 +58,8 @@ public class MovieRamaAuthenticationProvider implements AuthenticationProvider, 
 			authorities.add(new SimpleGrantedAuthority(SecurityConfiguration.ROLE_ADMIN));
 		} else {
 			// Validate that user's access token is listed in User table
-			UUID uuidToken;
-			try {
-				uuidToken = UUID.fromString(token);
-			} catch (Exception e) {
-				throw new MovieRamaAuthenticationException("Invalid HTTP Authorization header Bearer: " + token);
-			}
-
-			user = userService.find(uuidToken);
+			UUID accessToken = SecurityHelper.convertAccessToken(token);
+			user = userService.find(accessToken);
 
 			// Authorization algorithm!
 			if (user != null) {
