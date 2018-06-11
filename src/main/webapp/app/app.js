@@ -1,16 +1,80 @@
 (function () {
 
-    var app = angular.module("MovieRamaUi", ["ui.bootstrap", "ui.router", "ngSanitize", "ngTable", "ngCookies",
-        "ngCookies", "ngMaterial", "ui.sortable", "ngMessages", "md.time.picker"]);
+    var app = angular
+        .module("MovieRamaUi", ["ui.bootstrap", "ui.router", "ngSanitize", "ngTable", "ngCookies",
+                                "ngCookies", "ngMaterial", "ui.sortable", "ngMessages", "md.time.picker"])
+        .config(config)
+        .run(run);
 
     /**
-     * Main Application Initialization and root scope setup
+     *  Main Application Configuration (UI-Router)
      */
-    app.run(function ($rootScope, $modal, $q) {
+    config.$inject = ['$stateProvider', '$urlRouterProvider'];
+    function config($stateProvider, $urlRouterProvider) {
+        // Movies Add after login
+        $stateProvider.state("movies_add", {
+            url: "/movies/add",
+            templateUrl: "app/components/movies-add/views/moviesAdd.html",
+        });
+        // Movies Review (homepage)
+        $stateProvider.state("movies_review", {
+            url: "/movies",
+            templateUrl: "app/components/movies-review/views/moviesReview.html",
+        });
+        // Movies Review after logout
+        $stateProvider.state("logout", {
+            url: "/movies",
+            templateUrl: "app/components/movies-review/views/moviesReview.html",
+            controller: "LogoutCtrl" ,
+            // onEnter: function(){
+            //     AuthenticationService.Logout()
+            // }
+        });
+        // User Login form
+        $stateProvider.state("login", {
+            url: "/login",
+            templateUrl: "app/components/login/views/login.html",
+        });
+        // User Registration form
+        $stateProvider.state("register", {
+            url: "/register",
+            templateUrl: "app/components/register/views/register.html",
+        });
+        // Homepage
+        $urlRouterProvider.otherwise("/movies");
+    };
+
+    /**
+     *  Main Application Execution upon page (re)load:
+     *  a) Initialization
+     *  b) Root scope setup
+     */
+    run.$inject = ['$rootScope','$location', '$cookies', '$http', "$modal", "$q"];
+    function run($rootScope, $location, $cookies, $http, $modal, $q) {
+
         $rootScope.safeApply = function () {
             if (!$rootScope.$$phase)
                 $rootScope.$apply();
         };
+
+        /**
+         * Keep user logged in after page refresh!
+         *
+         *  Tip:
+         *  Uses stored 'globals.currentUser' information from his cookie
+         */
+        $rootScope.globals = $cookies.getObject('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.token;
+        }
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            // redirect to login page if not logged in and trying to access a restricted page
+            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+            var loggedIn = $rootScope.globals.currentUser;
+            if (restrictedPage && !loggedIn) {
+                $location.path('/login');
+            }
+        });
 
         /**
          * INFO Message Prompt
@@ -117,102 +181,39 @@
             }));
             return modalInstance.result;
         };
-    });
 
-    /**
-     * Main Application Configuration upon start
-     */
-    app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
-        // Movies Add after login
-        $stateProvider.state("movies_add", {
-            url: "/movies/add",
-            templateUrl: "app/components/movies-add/views/moviesAdd.html",
-        });
-        // Movies Review (homepage)
-        $stateProvider.state("movies_review", {
-            url: "/movies",
-            templateUrl: "app/components/movies-review/views/moviesReview.html",
-        });
-        // Movies Review after logout
-        $stateProvider.state("logout", {
-            url: "/movies",
-            templateUrl: "app/components/movies-review/views/moviesReview.html",
-            controller: "LogoutCtrl" ,
-            // onEnter: function(){
-            //     AuthenticationService.Logout()
-            // }
-        });
-        // User Login form
-        $stateProvider.state("login", {
-            url: "/login",
-            templateUrl: "app/components/login/views/login.html",
-        });
-        // User Registration form
-        $stateProvider.state("register", {
-            url: "/register",
-            templateUrl: "app/components/register/views/register.html",
-        });
-        // Homepage
-        $urlRouterProvider.otherwise("/movies");
-    }]);
-
-    run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
-    function run($rootScope, $location, $cookies, $http) {
-        // keep user logged in after page refresh
-        $rootScope.globals = $cookies.getObject('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.token;
-        }
-
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
-            var loggedIn = $rootScope.globals.currentUser;
-            if (restrictedPage && !loggedIn) {
-                $location.path('/login');
-            }
-        });
     }
 
     /**
-     * Main Application controller
+     * Main Application controllers (RootController interpreting HeaderCtrl and FooterCtrl too)
      */
     app.controller("RootController", ["$rootScope", "$scope", "$cookies", "$http", "$mdToast", '$controller',
         function ($rootScope, $scope, $cookies, $http, $mdToast, $controller) {
 
-            $controller('FooterCtrl', {
-                $scope: $scope
-            });
+            // Header Controller
             $controller('HeaderCtrl', {
                 $scope: $scope
             });
-            $scope.scrollTop = function () {
-                window.scrollTo(0, 0);
-            };
+            $scope.initHeader();
 
+            // Footer Controller
+            $controller('FooterCtrl', {
+                $scope: $scope
+            });
+            $scope.initFooter();
+
+            // State transition marker
             $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
                 $scope.previousState = from.name;
                 $scope.currentState = to.name;
             });
 
-            $scope.initHeader();
-            $scope.initFooter();
+            $scope.scrollTop = function () {
+                window.scrollTo(0, 0);
+            };
         }]
     );
 }());
-
-function htmlbodyHeightUpdate() {
-    var height3 = $(window).height();
-    var height1 = $('.nav').height() + 50;
-    height2 = $('.main').height();
-    if (height2 > height3) {
-        $('html').height(Math.max(height1, height3, height2) + 10);
-        $('body').height(Math.max(height1, height3, height2) + 10);
-    } else {
-        $('html').height(Math.max(height1, height3, height2));
-        $('body').height(Math.max(height1, height3, height2));
-    }
-}
 
 /**
  * Main Application
@@ -226,7 +227,17 @@ $(document).ready(function () {
         height2 = $('.main').height();
         htmlbodyHeightUpdate();
     });
-    moment.fn.toJsDateWithTimezone = function () {
-        return new Date(this.year(), this.month(), this.date(), this.hour(), this.minute(), this.second(), this.millisecond());
-    };
 });
+
+function htmlbodyHeightUpdate() {
+    var height3 = $(window).height();
+    var height1 = $('.nav').height() + 50;
+    height2 = $('.main').height();
+    if (height2 > height3) {
+        $('html').height(Math.max(height1, height3, height2) + 10);
+        $('body').height(Math.max(height1, height3, height2) + 10);
+    } else {
+        $('html').height(Math.max(height1, height3, height2));
+        $('body').height(Math.max(height1, height3, height2));
+    }
+}
