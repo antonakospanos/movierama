@@ -29,7 +29,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] SWAGGER_WHITELIST_REGEX = {"/swagger-resources.*", "/swagger-ui.html", "docs/api.html",
 			"/v2/api-docs.*", "/docs.*", "/webjars.*", "/configuration/ui", "/configuration/security"};
 
-	private static final String[] VENUS_WHITELIST_REGEX = new String[]{"/", "/version", "/health", "/ehcache.*", "/metrics.*"};
+	private static final String[] FRONTEND_WHITELIST_REGEX = {"/js.*", "/images.*", "/css.*", "/fonts.*", "/app.*"};
+
+	private static final String[] MOVIERAMA_WHITELIST_REGEX = new String[]{"/", "/api", "/version", "/health", "/ehcache.*", "/metrics.*"};
 
 	private static final String USERS_API = "/users/**";
 	private static final String MOVIES_API = "/movies/**";
@@ -73,7 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 				// Permit Swagger and Metrics APIs
-				.regexMatchers(VENUS_WHITELIST_REGEX).permitAll()
+				.regexMatchers(MOVIERAMA_WHITELIST_REGEX).permitAll()
+				.regexMatchers(FRONTEND_WHITELIST_REGEX).permitAll()
 				.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
 
 				// Permit Movies list and User Authentication API

@@ -100,13 +100,24 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<!-- Adds version file yearEnd web app -->
+			<!-- Adds version file to web app -->
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>2.1.1</version>
 				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
 					<webResources>
 						<resource>
 							<filtering>true</filtering>

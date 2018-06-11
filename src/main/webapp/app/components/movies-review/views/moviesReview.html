@@ -1,0 +1,39 @@
+<div ng-controller="MoviesReviewCtrl as ctrl" ng-init="ctrl.init()">
+    <div class="config-control-panel config-panel-margin main-width ">
+        &nbsp;&nbsp;Sort by:
+        <button type="button" class="btn btn-default review-control-button" ng-click="ctrl.sortDates()">Date</button>
+        <button type="button" class="btn btn-default review-control-button" ng-click="ctrl.sortHates()">Hates</button>
+        <button type="button" class="btn btn-default review-control-button" ng-click="ctrl.sortLikes()">Likes</button>
+    </div>
+
+    <div ng-repeat="item in model.data" class="panel panel-default control-panel config-control-panel config-panel-margin main-width md-whiteframe-6dp review-panel review-item-container">
+        <button class="md-button-toggle md-button md-ink-ripple review-item-button" type="button" ng-click="toggled = !toggled" aria-controls="docs-menu-{{item.title}}" aria-expanded="form.item.toggled" aria-label="item.id">
+            <div flex layout="row" class="ng-binding ng-scope layout-row flex">
+                {{item.title}}
+                <span flex class="flex"></span>
+                <div class="votesImage">
+                    <img src="images/thumb-up.svg"/>&nbsp;&nbsp;{{item.likes}}
+                </div>
+                <div class="votesImage">
+                    <img src="images/dislike-thumb.svg"/>&nbsp;&nbsp;{{item.hates}}
+                </div>
+                <span aria-hidden="true" class="md-toggle-icon" ng-class="{'toggled' : toggled}">
+                    <md-icon md-svg-icon="md-toggle-arrow"></md-icon>
+                </span>
+            </div>
+        </button>
+
+        <div id="docs-menu-{{item.title}}" class="menu-toggle-list" ng-class="{'toggled' : !toggled}">
+            <div class="config-overview-contents">
+                <div class="panel-body">
+                    <div>
+                        Published by {{item.publisher.name}}<br/><br/>
+                        <button type="button" class="pull-right btn btn-default review-control-button" ng-click="ctrl.like(item)">Like</button>
+                        <button type="button" class="pull-right btn btn-danger review-control-button" ng-click="ctrl.hate(item)">Hate</button>
+                        {{item.description}}
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>

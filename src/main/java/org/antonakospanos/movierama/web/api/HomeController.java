@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Home redirection to swagger api documentation 
  */
 @Controller
+@RequestMapping(value = "/api")
 public class HomeController extends BaseMovieRamaController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String index() {
-        // return "redirect:docs/api.html";
-        return "redirect:swagger-ui.html";
+        // return "redirect:/docs/api.html";
+        return "redirect:/swagger-ui.html";
     }
 }

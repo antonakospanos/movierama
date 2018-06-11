@@ -1,10 +1,6 @@
-Version: ${pom.version}-${git.commit.id.abbrev}
-Revision: ${git.commit.id}
+Version: ${pom.version}-${git.buildnumber}
+Revision: ${git.revision}
 Branch: ${git.branch}
-Tag: ${git.tags}
-Commit Time: ${git.commit.time}
-Build Time: ${git.build.time}
-
-Commit User Name: ${git.commit.user.title}
-Commit User Email: ${git.commit.user.email}
-Commit Message: ${git.commit.message.full}
+Tag: ${git.tag}
+Commits Count: ${git.commitsCount}
+Deployment Type: ${deployment.type}

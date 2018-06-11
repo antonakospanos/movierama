@@ -1,71 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html class="full" ng-app="MovieRamaUi">
 <head>
-    <title>Swagger UI</title>
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
-    <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='lib/handlebars-1.0.rc.1.js' type='text/javascript'></script>
-    <script src='lib/underscore-min.js' type='text/javascript'></script>
-    <script src='lib/backbone-min.js' type='text/javascript'></script>
-    <script src='lib/swagger.js' type='text/javascript'></script>
-    <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
-    <script src='swagger-ui.js' type='text/javascript'></script>
+    <meta charset="utf-8"/>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+    <link href="css/bootstrap.css" rel="stylesheet"/>
+    <link href="css/jquery.dataTables.css" rel="stylesheet"/>
+    <link href="css/jquery-ui.css" rel="stylesheet"/>
+    <link href="css/angular-intro.css" rel="stylesheet"/>
+    <link href="css/angular-material.css" rel="stylesheet"/>
+    <link href="css/main.css" rel="stylesheet"/>
+    <link href="css/md-time-picker.css" rel="stylesheet"/>
+    <link href="js/ng-table/ng-table.min.css" rel="stylesheet"/>
 
-    <script type="text/javascript">
-
-        function swagger_init (swagger_url) {
-            window.swaggerUi = new SwaggerUi({
-                discoveryUrl: swagger_url,
-                apiKey: "",
-                supportHeaderParams: false,
-                supportedSubmitMethods: ['get', 'post', 'put', 'patch', 'delete'],
-                onComplete: function (swaggerApi, swaggerUi) {
-                    if (console) {
-                        console.log("Loaded SwaggerUI")
-                        console.log(swaggerApi);
-                        console.log(swaggerUi);
-                    }
-                    $('pre code').each(function (i, e) {
-                        hljs.highlightBlock(e)
-                    });
-                },
-                onFailure: function (data) {
-                    if (console) {
-                        console.log("Unable yearEnd Load SwaggerUI");
-                        console.log(data);
-                    }
-                },
-                docExpansion: "none"
-            });
-            window.swaggerUi.load();
-        }
-
-        function getAbsolutePath() {
-            var loc = window.location;
-            var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/'));
-            return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
-        }
-
-        function log() {
-            console.log.apply(console, arguments);
-        }
-
-        function redirection(swagger_url) {
-            window.location = swagger_url;
-        }
-
-        $(function () {
-            var swagger_url = getAbsolutePath() + "/swagger-ui.html";
-            swagger_init(swagger_url);
-            redirection(swagger_url);
-        });
+    <!-- Configuration -->
+    <script>
+        var backend_ip = "localhost";
+        var backend_port = "8080";
+        var backend_context_path = "movierama";
     </script>
+
+    <!-- Library Scripts -->
+    <script src="js/underscore-min.js"></script>
+    <script src="js/jquery-1.11.2.js"></script>
+    <script src="js/jqueryui/jquery-ui.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-waitingfor.js"></script>
+    <script src="js/introJs.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/angular-animate.js"></script>
+    <script src="js/angular-translate.min.js"></script>
+    <script src="js/angular-aria.js"></script>
+    <script src="js/angular-material.js"></script>
+    <script src="js/sortable.js"></script>
+    <script src="js/angular-resource.min.js"></script>
+    <script src="js/angular-cookies.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="js/angular-sanitize.js"></script>
+    <script src="js/angular-filereader.js"></script>
+    <script src="js/linq.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/moment-timezone.js"></script>
+    <script src="js/angular-moment.js"></script>
+    <script src="js/angular-file-upload.min.js"></script>
+    <script src="js/angular-intro.js"></script>
+    <script src="js/angular-ui-router.js"></script>
+    <script src="js/angular-messages.js"></script>
+    <script src="js/ng-table/ng-table.js"></script>
+    <script src="js/validate.js"></script>
+    <script src="js/md-time-picker.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="app/app.js"></script>
+    <script src="app/components/footer/controllers/Footer.js"></script>
+    <script src="app/components/movies-review/controllers/MoviesReviewCtrl.js"></script>
+    <script src="app/components/movies-add/controllers/MoviesAddCtrl.js"></script>
 </head>
-<body>
-<h1>MovieRama Platform</h1>
-Hello Device, please navigate to /swagger-ui.html
+
+<body ng-controller="RootController" class="full">
+    <md-toolbar class="menu-toolbar navbar-center" layout="row" aria-hidden="false" md-scroll-shrink="true">
+        <div class="md-toolbar-tools main-width">
+
+            <!-- Home Page Logo -->
+            <md-button ui-sref="movies_review" title="Homepage">
+                <img src="images/logo.png"/>
+            </md-button>
+
+            <!-- Menu Items -->
+            <md-button class="menu-width" ui-sref="movies_add">Add Movie</md-button>
+
+            <!-- Logout Button -->
+            <span flex> </span>
+            <md-button class="form-group usertag logout-width">
+                <a id="menuLogout" class="btn btn-success logout-button glyphicon glyphicon-off" tooltip="Log out" tooltip-placement="bottom"></a>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-toolbar class="menu-width" md-scroll-shrink="true">
+        <div class="container md-toolbar-tools main-width" layout="row">
+            <div id="pageTitleId"></div>
+        </div>
+        <!--<md-ink-bar class="md-primary" style="top: 100px; width: 100%; background-color: #e91e63;"></md-ink-bar>-->
+    </md-toolbar>
+
+    <div class="main-panel" ui-view ></div>
+
+    <div id="toaster"></div>
+    <footer class="footer" aria-hidden="false">
+        <div class="container main-width" layout="row">
+            <div class="configuration-buttons title-style">
+                <div id="configCheck"><img class="configImage" src="images/checked.svg"/></div>
+                <div id="configAlert"><img class="configImage" src="images/alert.svg"/></div>
+                <div id="configPrompt"></div>
+                <div id="progressBar">
+                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
