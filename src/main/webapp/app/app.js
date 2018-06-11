@@ -1,6 +1,6 @@
 (function () {
 
-    var app = angular.module("MovieRamaUi", ["ui.bootstrap", "ui.router", "ngSanitize", "ngTable",
+    var app = angular.module("MovieRamaUi", ["ui.bootstrap", "ui.router", "ngSanitize", "ngTable", "ngCookies",
         "ngCookies", "ngMaterial", "ui.sortable", "ngMessages", "md.time.picker"]);
 
     /**
@@ -23,7 +23,7 @@
             if (!!size)
                 sz = size
             var modalInstance = $modal.open(angular.extend({
-                templateUrl: 'common/directives/infoModal.html',
+                templateUrl: 'common/views/infoModal.html',
                 controller: 'MessageInstanceCtrl',
                 size: sz,
                 resolve: {
@@ -44,7 +44,7 @@
         $rootScope.modalWarning = function (message, choice) {
             var deferred = $q.defer();
             var modalInstance = $modal.open(angular.extend({
-                templateUrl: 'app/common/directives/warningModal.html',
+                templateUrl: 'app/common/views/warningModal.html',
                 controller: 'ConfirmInstanceCtrl',
                 resolve: {
                     message: function () {
@@ -74,7 +74,7 @@
         $rootScope.modalAlert = function (message, choice) {
             var deferred = $q.defer();
             var modalInstance = $modal.open(angular.extend({
-                templateUrl: 'app/common/directives/alertModal.html',
+                templateUrl: 'app/common/views/alertModal.html',
                 controller: 'ConfirmInstanceCtrl',
                 resolve: {
                     message: function () {
@@ -106,7 +106,7 @@
             if (!!size)
                 sz = size
             var modalInstance = $modal.open(angular.extend({
-                templateUrl: 'app/common/directives/errorModal.html',
+                templateUrl: 'app/common/views/errorModal.html',
                 controller: 'MessageInstanceCtrl',
                 size: sz,
                 resolve: {
@@ -133,9 +133,42 @@
             url: "/movies",
             templateUrl: "app/components/movies-review/views/moviesReview.html",
         });
-        // Home page
+        // User Login
+        $stateProvider.state("login", {
+            url: "/login",
+            templateUrl: "app/components/login/views/login.html",
+        });
+        // User Registration
+        $stateProvider.state("register", {
+            url: "/register",
+            templateUrl: "app/components/register/views/register.html",
+        });
+        // User Login
+        $stateProvider.state("logout", {
+            url: "/login",
+            templateUrl: "app/components/login/views/login.html",
+        });
+        // Homepage
         $urlRouterProvider.otherwise("/movies");
     }]);
+
+    run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
+    function run($rootScope, $location, $cookies, $http) {
+        // keep user logged in after page refresh
+        $rootScope.globals = $cookies.getObject('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.token;
+        }
+
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            // redirect to login page if not logged in and trying to access a restricted page
+            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+            var loggedIn = $rootScope.globals.currentUser;
+            if (restrictedPage && !loggedIn) {
+                $location.path('/login');
+            }
+        });
+    }
 
     /**
      * Main Application controller
@@ -146,53 +179,22 @@
             $controller('FooterCtrl', {
                 $scope: $scope
             });
+            $controller('HeaderCtrl', {
+                $scope: $scope
+            });
             $scope.scrollTop = function () {
                 window.scrollTo(0, 0);
             };
-
-            $scope.setToolbarTitle = function(title) {
-                var divElement = document.getElementById("pageTitleId")
-                for (var i = 0; i < divElement.childNodes.length; ++i) {
-                    divElement.removeChild(divElement.childNodes[i]);
-                }
-                var textNode = document.createTextNode(title);
-                divElement.appendChild(textNode);
-            }
 
             $scope.$on('$stateChangeSuccess', function (ev, to, toParams, from) {
                 $scope.previousState = from.name;
                 $scope.currentState = to.name;
             });
 
+            $scope.initHeader();
             $scope.initFooter();
         }]
     );
-
-    /**
-     * Application wide Modal Message Controller
-     */
-    angular.module('MovieRamaUi').controller('MessageInstanceCtrl', function ($scope, $modalInstance, message, $sce) {
-        $scope.message = $sce.trustAsHtml(message);
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    });
-
-    /**
-     * Application wide Confirmation Message Controller
-     */
-    angular.module('MovieRamaUi').controller('ConfirmInstanceCtrl', function ($scope, $modalInstance, message, choice, $sce) {
-        $scope.message = $sce.trustAsHtml(message);
-        $scope.choice = choice;
-
-        $scope.ok = function (choice) {
-            $modalInstance.close('yes');
-        };
-
-        $scope.cancel = function (choice) {
-            $modalInstance.close('');
-        };
-    });
 }());
 
 function htmlbodyHeightUpdate() {

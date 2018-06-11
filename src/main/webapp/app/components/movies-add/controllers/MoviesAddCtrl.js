@@ -2,9 +2,9 @@
 	"use strict";
 	angular
 		.module("MovieRamaUi")
-		.controller("MoviesAddCtrl", ["$scope", "$http", "$state", "$mdToast", MoviesAddCtrl]);
+		.controller("MoviesAddCtrl", ["$scope", "$http", "$state", MoviesAddCtrl]);
 
-	function MoviesAddCtrl($scope, $http, $state, $mdToast) {
+	function MoviesAddCtrl($scope, $http, $state) {
         var ctrl = this;
         ctrl.addFlowUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
 
@@ -76,16 +76,5 @@
                     }
                 });
         }
-
-        $scope.createToast = function(message) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .textContent(message)
-                    .parent(document.querySelectorAll('#toaster'))
-                    .hideDelay(5000)
-                    .action('x')
-                    .capsule(true)
-            );
-        };
     }
 }());

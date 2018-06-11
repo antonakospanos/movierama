@@ -51,9 +51,18 @@
 
     <!-- Application Scripts -->
     <script src="app/app.js"></script>
+    <script src="app/common/controllers/ConfirmInstanceCtrl.js"></script>
+    <script src="app/common/controllers/MessageInstanceCtrl.js"></script>
+
+    <script src="app/components/header/controllers/Header.js"></script>
     <script src="app/components/footer/controllers/Footer.js"></script>
     <script src="app/components/movies-review/controllers/MoviesReviewCtrl.js"></script>
     <script src="app/components/movies-add/controllers/MoviesAddCtrl.js"></script>
+    <script src="app/components/login/controllers/LoginCtrl.js"></script>
+    <script src="app/components/register/controllers/RegisterCtrl.js"></script>
+
+    <script src="app/services/UserService.js"></script>
+    <script src="app/services/AuthenticationService.js"></script>
 </head>
 
 <body ng-controller="RootController" class="full">
@@ -68,11 +77,27 @@
             <!-- Menu Items -->
             <md-button class="menu-width" ui-sref="movies_add">Add Movie</md-button>
 
-            <!-- Logout Button -->
+            <!-- Login and Logout Button -->
             <span flex> </span>
-            <md-button class="form-group usertag logout-width">
-                <a id="menuLogout" class="btn btn-success logout-button glyphicon glyphicon-off" tooltip="Log out" tooltip-placement="bottom"></a>
-            </md-button>
+            <div id="login">
+                <md-button class="form-group usertag logout-width">
+                    Log in<a id="menuLogIn" class="btn pull-right btn-success logout-button glyphicon glyphicon-off"
+                             ui-sref="login" tooltip="Sign in" tooltip-placement="bottom"></a>
+                </md-button>
+            </div>
+            <div id="register">
+                <md-button class="form-group usertag logout-width">
+                    Register<a id="menuRegister"
+                               class="btn pull-right btn-success logout-button glyphicon glyphicon-off"
+                               ui-sref="register" tooltip="Sign up" tooltip-placement="bottom"></a>
+                </md-button>
+            </div>
+            <div id="logout">
+                <md-button class="form-group usertag logout-width">
+                    Log out <a id="menuLogout" class="btn pull-right btn-success logout-button glyphicon glyphicon-off"
+                               ui-sref="logout" tooltip="Log out" tooltip-placement="bottom"></a>
+                </md-button>
+            </div>
         </div>
     </md-toolbar>
 

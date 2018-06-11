@@ -2,17 +2,12 @@
 	"use strict";
 	angular
 		.module("MovieRamaUi")
-		.controller("MoviesReviewCtrl", ["$scope", "$http", "$mdToast", "$cookies", MoviesReviewCtrl]);
+		.controller("MoviesReviewCtrl", ["$scope", "$http", "$cookies", MoviesReviewCtrl]);
 
-	function MoviesReviewCtrl($scope, $http, $mdToast, $cookies) {
+	function MoviesReviewCtrl($scope, $http, $cookies) {
 		var ctrl = this;
 		var listMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
         var voteMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/votes";
-
-        ctrl.init = function () {
-            $scope.setToolbarTitle("Movies");
-            ctrl.listMovies();
-        }
 
 		ctrl.listMovies = function () {
 			$http({
@@ -67,7 +62,7 @@
 
                     	var headers = {
                             "Content-Type": "application/json",
-							"Authorization": "Bearer " +  $cookies
+							"Authorization": $http.defaults.headers.common.Authorization // $cookies.global.accessToken
 						}
                     	var body = {
                             "like": true,
@@ -75,11 +70,9 @@
 						}
                         $http.post(voteMoviesUrl, body, { headers: headers })
                             .then(function successCallback(response) {
-                                console.log("INFO:" + response.data);
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 $scope.scrollTop();
                             }, function errorCallback(response) {
-                                console.log("ERROR: " + response.data);
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 $scope.scrollTop();
                             });
@@ -94,7 +87,7 @@
 
                         var headers = {
                             "Content-Type": "application/json",
-                            "Authorization": "Bearer " +  $cookies
+                            "Authorization": $http.defaults.headers.common.Authorization // $cookies.global.accessToken
                         }
                         var body = {
                             "like": false,
@@ -113,16 +106,5 @@
                     }
                 });
         }
-
-        $scope.createToast = function(message) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .textContent(message)
-                    .parent(document.querySelectorAll('#toaster'))
-                    .hideDelay(5000)
-                    .action('x')
-                    .capsule(true)
-            );
-        };
 	}
 }());

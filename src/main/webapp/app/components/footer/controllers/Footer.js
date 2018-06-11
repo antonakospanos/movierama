@@ -7,7 +7,7 @@
 
     function FooterCtrl($scope, $http, $mdToast) {
 
-        // Auto refresh footer every 5 seconds to re-calculate backend changes (e.g. configuration changes)
+        // Auto refresh footer every 10 seconds to re-calculate backend changes
         $scope.intervalTimer = setInterval(function () {
             $scope.refreshMovies()
         }, 10000);
