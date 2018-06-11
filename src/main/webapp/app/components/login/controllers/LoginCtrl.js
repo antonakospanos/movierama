@@ -23,7 +23,8 @@
                         AuthenticationService.Authorize(ctrl.username, response.data.id);
                         $scope.loggedIn();
                         $scope.createToast("User '" + ctrl.username + "' logged in successfully")
-                        $state.go($scope.previousState ? $scope.previousState : "movies_review", {});
+                        $state.go("movies_review");
+                        // $location.path("/movies");
                     } else {
                         $scope.createToast(response.data.result + "! " + response.data.description)
                     }

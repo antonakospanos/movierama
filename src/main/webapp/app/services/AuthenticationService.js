@@ -14,16 +14,6 @@
 
         return service;
 
-        function Login(username, password) {
-            return $http
-                .get(UserService.GetUrl() + "/id?username=" + username + "&password=" + password)
-                .then(function successCallback(response) {
-                    return response;
-                }, function errorCallback(response) {
-                    return response;
-                });
-        }
-
         function Authorize(username, accessToken) {
             $rootScope.globals = {
                 currentUser: {
@@ -32,6 +22,8 @@
                 }
             };
 
+            console.log("Adding header: " + accessToken)
+
             // set default auth header for http requests
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + accessToken;
 
@@ -39,6 +31,16 @@
             var cookieExp = new Date();
             cookieExp.setDate(cookieExp.getDate() + 7);
             $cookies.putObject('globals', $rootScope.globals, { expires: cookieExp });
+        }
+
+        function Login(username, password) {
+            return $http
+                .get(UserService.GetUrl() + "/id?username=" + username + "&password=" + password)
+                .then(function successCallback(response) {
+                    return response;
+                }, function errorCallback(response) {
+                    return response;
+                });
         }
 
         function Logout() {

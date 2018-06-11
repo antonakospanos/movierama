@@ -123,30 +123,34 @@
      * Main Application Configuration upon start
      */
     app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
-        // Movies Add
+        // Movies Add after login
         $stateProvider.state("movies_add", {
             url: "/movies/add",
             templateUrl: "app/components/movies-add/views/moviesAdd.html",
         });
-        // Movies Review
+        // Movies Review (homepage)
         $stateProvider.state("movies_review", {
             url: "/movies",
             templateUrl: "app/components/movies-review/views/moviesReview.html",
         });
-        // User Login
+        // Movies Review after logout
+        $stateProvider.state("logout", {
+            url: "/movies",
+            templateUrl: "app/components/movies-review/views/moviesReview.html",
+            controller: "LogoutCtrl" ,
+            // onEnter: function(){
+            //     AuthenticationService.Logout()
+            // }
+        });
+        // User Login form
         $stateProvider.state("login", {
             url: "/login",
             templateUrl: "app/components/login/views/login.html",
         });
-        // User Registration
+        // User Registration form
         $stateProvider.state("register", {
             url: "/register",
             templateUrl: "app/components/register/views/register.html",
-        });
-        // User Login
-        $stateProvider.state("logout", {
-            url: "/login",
-            templateUrl: "app/components/login/views/login.html",
         });
         // Homepage
         $urlRouterProvider.otherwise("/movies");

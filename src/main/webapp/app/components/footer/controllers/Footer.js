@@ -7,10 +7,10 @@
 
     function FooterCtrl($scope, $http, $mdToast) {
 
-        // Auto refresh footer every 10 seconds to re-calculate backend changes
+        // Auto refresh footer every 5 seconds to re-calculate backend changes
         $scope.intervalTimer = setInterval(function () {
             $scope.refreshMovies()
-        }, 10000);
+        }, 5000);
 
         $scope.refreshMovies = function() {
             refreshMovies();
@@ -35,7 +35,11 @@
                     var movies = response.data.length;
                     setConfigCheck('none')
                     setConfigAlert('display')
-                    setConfigPrompt(movies + " movies stored in MovieRama");
+                    if (movies === undefined) {
+                        setConfigPrompt("Could not find movies in MovieRama");
+                    } else {
+                        setConfigPrompt(movies + " movies stored in MovieRama");
+                    }
                 });
         }
 

@@ -5,8 +5,8 @@
         .module('MovieRamaUi')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['UserService', '$location', '$scope', "$state"];
-    function RegisterCtrl(UserService, $location, $scope, $state) {
+    RegisterCtrl.$inject = ['UserService', 'AuthenticationService', '$location', '$scope', "$state"];
+    function RegisterCtrl(UserService, AuthenticationService, $location, $scope, $state) {
         var ctrl = this;
         ctrl.register = register;
 
@@ -16,9 +16,10 @@
                     console.log(response)
                     $scope.createToast(response.data.result + "! " + response.data.description)
                     if (response.data.result === 'SUCCESS') {
-                        AuthenticationService.Authorize(ctrl.username, response.data.id);
+                        AuthenticationService.Authorize(ctrl.username, response.data.data.id);
                         $scope.loggedIn();
-                        $state.go($scope.previousState ? $scope.previousState : "movies_review", {});
+                        $state.go("movies_review");
+                        // $location.path("/movies");
                     }
                 });
         }

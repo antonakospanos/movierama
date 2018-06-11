@@ -17,38 +17,50 @@
         }
 
         function refreshHeader() {
-            // check Authorization
+            var header = $http.defaults.headers.common.Authorization;
+            console.log("Authorization header: " + header)
+            if (header === undefined || header === "") {
+                $scope.loggedOut()
+            } else {
+                $scope.loggedIn()
+            }
         }
 
         $scope.initHeader = function initFooter() {
-            $scope.loggedOut()
             $scope.refreshHeader()
         }
 
         $scope.loggedIn = function() {
+            setSubscriptionMenus('initial');
             setLoginButton('none')
             setRegisterButton('none')
-            setLogoutButton('display')
+            setLogoutButton('initial');
         }
 
         $scope.loggedOut = function() {
-            setLoginButton('display')
-            setRegisterButton('display')
-            setLogoutButton('none')
+            setSubscriptionMenus('none');
+            setLoginButton('initial');
+            setRegisterButton('initial');
+            setLogoutButton('none');
         }
 
         function setLoginButton(display) {
-            var alert = document.getElementById("login");
+            var alert = document.getElementById("login-button");
             alert.style.display = display;
         }
 
         function setRegisterButton(display) {
-            var alert = document.getElementById("register");
+            var alert = document.getElementById("register-button");
             alert.style.display = display;
         }
 
         function setLogoutButton(display) {
-            var alert = document.getElementById("logout");
+            var alert = document.getElementById("logout-button");
+            alert.style.display = display;
+        }
+
+        function setSubscriptionMenus(display) {
+            var alert = document.getElementById("subscription-menus");
             alert.style.display = display;
         }
     }

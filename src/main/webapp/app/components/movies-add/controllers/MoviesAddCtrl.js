@@ -30,7 +30,7 @@
             $scope.modalWarning(message, "PROCEED")
                 .then(function (response) {
                     if (response === true) {
-                        $state.go($scope.previousState ? $scope.previousState : "movies_review", {});
+                        $state.go("movies_review");
                         $scope.scrollTop();
                     }
                 });
@@ -65,7 +65,7 @@
                     if (response === true) {
                         $http.post(ctrl.addFlowUrl, $scope.movie, config)
                             .then(function successCallback(response) {
-                                $state.go("movies_review", {});
+                                $state.go("movies_review");
                                 $scope.scrollTop();
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                             }, function errorCallback(response) {
