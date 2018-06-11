@@ -187,8 +187,8 @@
     /**
      * Main Application controllers (RootController interpreting HeaderCtrl and FooterCtrl too)
      */
-    app.controller("RootController", ["$rootScope", "$scope", "$cookies", "$http", "$mdToast", '$controller',
-        function ($rootScope, $scope, $cookies, $http, $mdToast, $controller) {
+    app.controller("RootController", ["$rootScope", "$scope", "$cookies", "$http", "$mdToast", '$controller', "$state",
+        function ($rootScope, $scope, $cookies, $http, $mdToast, $controller, $state) {
 
             // Header Controller
             $controller('HeaderCtrl', {
@@ -207,6 +207,10 @@
                 $scope.previousState = from.name;
                 $scope.currentState = to.name;
             });
+
+            $scope.reloadState = function() {
+                $state.go($state.current, {}, {reload: true});
+            }
 
             $scope.scrollTop = function () {
                 window.scrollTo(0, 0);
