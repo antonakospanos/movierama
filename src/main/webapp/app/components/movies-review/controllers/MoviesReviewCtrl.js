@@ -2,12 +2,17 @@
 	"use strict";
 	angular
 		.module("MovieRamaUi")
-		.controller("MoviesReviewCtrl", ["$scope", "$http", MoviesReviewCtrl]);
+		.controller("MoviesReviewCtrl", ["$scope", "$http", "$state", MoviesReviewCtrl]);
 
-	function MoviesReviewCtrl($scope, $http) {
+	function MoviesReviewCtrl($scope, $http, $state) {
 		var ctrl = this;
-		var listMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
         var voteMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/votes";
+        var listMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
+
+        if ($state.params.publisher !== undefined && $state.params.publisher.id !== undefined) {
+            listMoviesUrl = listMoviesUrl + "?userId=" + $state.params.publisher.id;
+            $scope.publisher = $state.params.publisher.name
+        }
 
         // Sorting states
         var sortedByLikesDesc = false;
@@ -128,6 +133,23 @@
             }, function errorCallback(response) {
                 $scope.model = {data: response.data};
             });
+        }
+
+        /**
+         *  List MovieRama movies by passed Publisher!
+         */
+        ctrl.filterByPublisher = function (movie) {
+            var publisher = movie.publisher;
+            if ($state.params.publisher && publisher.id === $state.params.publisher.id) {
+                $state.reload();
+            } else {
+                $state.go("movies_publisher_review", {
+                    publisher: {
+                        id: publisher.id,
+                        name: publisher.name
+                    }
+                });
+            }
         }
 
         /**

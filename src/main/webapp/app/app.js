@@ -21,14 +21,23 @@
             url: "/movies",
             templateUrl: "app/components/movies-review/views/moviesReview.html",
         });
+        // Movies Review (specified publisher)
+        $stateProvider.state("movies_publisher_review", {
+            url: "/publisher",
+            templateUrl: "app/components/movies-review/views/moviesReview.html",
+            controller: "MoviesReviewCtrl",
+            params: {
+                publisher: {
+                    id: undefined,
+                    name: undefined
+                }
+            }
+        });
         // Movies Review after logout
         $stateProvider.state("logout", {
             url: "/movies",
             templateUrl: "app/components/movies-review/views/moviesReview.html",
             controller: "LogoutCtrl" ,
-            // onEnter: function(){
-            //     AuthenticationService.Logout()
-            // }
         });
         // User Login form
         $stateProvider.state("login", {
@@ -208,6 +217,7 @@
                 $scope.currentState = to.name;
             });
 
+            // Reload state
             $scope.reloadState = function() {
                 $state.go($state.current, {}, {reload: true});
             }

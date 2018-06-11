@@ -1,5 +1,8 @@
 <div ng-controller="MoviesReviewCtrl as ctrl" ng-init="ctrl.listMovies()">
     <div class="config-control-panel config-panel-margin main-width ">
+        <div class="pageTitle">
+            {{ publisher }}
+        </div>
         &nbsp;&nbsp;Sort by:
         <button type="button" class="btn btn-default review-control-button" ng-click="ctrl.sortDates()">Date</button>
         <button type="button" class="btn btn-default review-control-button" ng-click="ctrl.sortLikes()">Likes</button>
@@ -28,7 +31,8 @@
             <div class="config-overview-contents">
                 <div class="panel-body">
                     <div>
-                        Published by {{item.publisher.name}} on {{item.publicationDate | date : 'd LLLL yyyy, HH:mm' }}<br/><br/>
+                        Published by <a aria-pressed="true" role="button" ng-click="ctrl.filterByPublisher(item)">
+                        {{item.publisher.name}}</a> on {{item.publicationDate | date : 'd LLLL yyyy, HH:mm' }}<br/><br/>
                         <div>
                             <button type="button" class="pull-right btn btn-danger review-control-button" ng-click="ctrl.hate(item)">Hate</button>
                             <button type="button" class="pull-right btn btn-default review-control-button" ng-click="ctrl.like(item)">Like</button>
