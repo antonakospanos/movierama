@@ -19,8 +19,8 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
-    hibernate:
-      ddl-auto: create-drop # create | update | validate | create-drop
+    #hibernate:
+      #ddl-auto: create-drop # create | update | validate | create-drop
     properties:
       net.sf.ehcache.configurationResourceName: movierama-ehcache.xml
       hibernate:
