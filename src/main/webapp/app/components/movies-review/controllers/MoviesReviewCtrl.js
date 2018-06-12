@@ -14,37 +14,44 @@
             $scope.publisher = $state.params.publisher.name
         }
 
+        // Initialization
+        ctrl.init = function () {
+            ctrl.listMovies();
+        }
+
         // Sorting states
         var sortedByLikesDesc = false;
         var sortedByHatesDesc = false;
         var sortedByDatesDesc = false;
 
         ctrl.sortLikes = function () {
-		    if (ctrl.sortedByLikesDesc === undefined || ctrl.sortedByLikesDesc === false) {
-                ctrl.sortLikesDesc();
-            } else {
+		    if (ctrl.sortedByLikesDesc === true) {
                 ctrl.sortLikesAsc();
+            } else {
+                ctrl.sortLikesDesc();
             }
         }
 
         ctrl.sortHates = function () {
-            if (ctrl.sortedByHatesDesc === undefined || ctrl.sortedByHatesDesc === false) {
-                ctrl.sortHatesDesc();
-            } else {
+            if (ctrl.sortedByHatesDesc === true) {
                 ctrl.sortHatesAsc();
+            } else {
+                ctrl.sortHatesDesc();
             }
         }
 
         ctrl.sortDates = function () {
-            if (ctrl.sortedByDatesDesc === undefined || ctrl.sortedByDatesDesc === false) {
-                ctrl.sortDatesDesc();
-            } else {
+            if (ctrl.sortedByDatesDesc === true) {
                 ctrl.sortDatesAsc();
+            } else {
+                ctrl.sortDatesDesc();
             }
         }
 
 		ctrl.sortLikesDesc = function () {
             ctrl.sortedByLikesDesc = true;
+            ctrl.sortedByHatesDesc = false;
+            ctrl.sortedByDatesDesc = false;
 			$scope.model.data.sort(function (a, b) {
 				var likesA = a && a.likes ? a.likes : 0;
 				var likesB = b && b.likes ? b.likes : 0;
@@ -57,7 +64,9 @@
 		}
 
         ctrl.sortHatesDesc = function () {
+            ctrl.sortedByLikesDesc = false;
             ctrl.sortedByHatesDesc = true;
+            ctrl.sortedByDatesDesc = false;
             $scope.model.data.sort(function (a, b) {
                 var hatesA = a && a.hates ? a.hates : 0;
                 var hatesB = b && b.hates ? b.hates : 0;
@@ -70,6 +79,8 @@
         }
 
         ctrl.sortDatesDesc = function () {
+            ctrl.sortedByLikesDesc = false;
+            ctrl.sortedByHatesDesc = false;
             ctrl.sortedByDatesDesc = true;
             $scope.model.data.sort(function (a, b) {
                 var dateA = a && a.publicationDate ? a.publicationDate : 0;
@@ -84,6 +95,8 @@
 
         ctrl.sortLikesAsc = function () {
             ctrl.sortedByLikesDesc = false;
+            ctrl.sortedByHatesDesc = false;
+            ctrl.sortedByDatesDesc = false;
             $scope.model.data.sort(function (a, b) {
                 var likesA = a && a.likes ? a.likes : 0;
                 var likesB = b && b.likes ? b.likes : 0;
@@ -97,6 +110,8 @@
 
         ctrl.sortHatesAsc = function () {
             ctrl.sortedByHatesDesc = false;
+            ctrl.sortedByHatesDesc = false;
+            ctrl.sortedByDatesDesc = false;
             $scope.model.data.sort(function (a, b) {
                 var hatesA = a && a.hates ? a.hates : 0;
                 var hatesB = b && b.hates ? b.hates : 0;
@@ -109,6 +124,8 @@
         }
 
         ctrl.sortDatesAsc = function () {
+            ctrl.sortedByDatesDesc = false;
+            ctrl.sortedByHatesDesc = false;
             ctrl.sortedByDatesDesc = false;
             $scope.model.data.sort(function (a, b) {
                 var dateA = a && a.publicationDate ? a.publicationDate : 0;
@@ -174,10 +191,8 @@
                             .then(function successCallback(response) {
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 ctrl.listMovies()
-                                $scope.scrollTop();
                             }, function errorCallback(response) {
                                 $scope.createToast(response.data.result + "! " + response.data.description)
-                                $scope.scrollTop();
                             });
                     }
                 });
@@ -206,11 +221,9 @@
                                 console.log("INFO:" + response.data);
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 ctrl.listMovies()
-                                $scope.scrollTop();
                             }, function errorCallback(response) {
                                 console.log("ERROR: " + response.data);
                                 $scope.createToast(response.data.result + "! " + response.data.description)
-                                $scope.scrollTop();
                             });
                     }
                 });
@@ -223,7 +236,8 @@
          * @param item
          */
         ctrl.retract = function (item) {
-            $scope.modalAlert("Do you want to retract the vote to '" + item.title + "' ?", "RETRACT")
+            item.vote = item.like ? "positive vote" : "negative vote";
+            $scope.modalAlert("Do you want to retract the " +item.vote+ " to '" + item.title + "' ?", "RETRACT")
                 .then(function (response) {
                     if (response === true) {
 
@@ -252,6 +266,55 @@
          */
         ctrl.hideVotingButtons= function (item) {
             return !$http.defaults.headers.common.Authorization
+        }
+
+        /**
+         *  Retrieves the user's vote to the Movie!
+         *
+         * @param item
+         */
+        ctrl.findVote= function (item) {
+            $http({
+                url: voteMoviesUrl + "?movie=" + item.id
+            }).then(function successCallback(response) {
+                item.like = response.data.like;
+            });
+        }
+
+        /**
+         *  Hide like button to fans!
+         *
+         * @param item
+         */
+        ctrl.hideLikeButton= function (item) {
+            return item.like !== undefined && item.like === true
+        }
+
+        /**
+         *  Hide hate button haters!
+         *
+         * @param item
+         */
+        ctrl.hideHateButton= function (item) {
+            return item.like !== undefined && item.like === false
+        }
+
+        /**
+         *  Hide retract like button to users that have not hated yet!
+         *
+         * @param item
+         */
+        ctrl.hideRetractLikeButton = function (item) {
+            return item.like === undefined || item.like === false
+        }
+
+        /**
+         *  Hide retract hate button to users that have not hated yet!
+         *
+         * @param item
+         */
+        ctrl.hideRetractHateButton = function (item) {
+            return item.like === undefined || item.like === true
         }
 	}
 }());

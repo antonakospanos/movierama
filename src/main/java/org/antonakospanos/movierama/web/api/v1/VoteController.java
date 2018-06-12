@@ -5,6 +5,7 @@ import org.antonakospanos.movierama.service.VoteService;
 import org.antonakospanos.movierama.support.LoggingHelper;
 import org.antonakospanos.movierama.web.api.BaseMovieRamaController;
 import org.antonakospanos.movierama.web.dto.response.ResponseBase;
+import org.antonakospanos.movierama.web.dto.users.UserDto;
 import org.antonakospanos.movierama.web.dto.votes.VoteDto;
 import org.antonakospanos.movierama.web.enums.Result;
 import org.antonakospanos.movierama.web.support.SecurityHelper;
@@ -70,14 +71,37 @@ public class VoteController extends BaseMovieRamaController {
     )
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ResponseBase> delete(@RequestHeader(value = "Authorization") String authorization, @RequestParam (required = true) UUID movie) throws Exception {
+    public ResponseEntity<ResponseBase> delete(@RequestHeader(value = "Authorization") String authorization, @RequestParam UUID movie) throws Exception {
         ResponseEntity<ResponseBase> response;
-        logger.debug(LoggingHelper.logInboundRequest("DELETE: " + movie));
+        logger.debug(LoggingHelper.logInboundRequest("DELETE: /votes?movie=" + movie));
 
         UUID accessToken = SecurityHelper.getAccessToken(authorization);
         String result = service.delete(accessToken, movie);
         ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS).description(result);
         response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
+
+        logger.debug(LoggingHelper.logInboundResponse(response));
+
+        return response;
+    }
+
+    @ApiOperation(value = "Lists a vote on the movie", response = UserDto.class)
+    @RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
+    @ApiImplicitParam(
+            name = "Authorization",
+            value = "Bearer <The user's access token obtained upon registration or authentication>",
+            example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+            required = true,
+            dataType = "string",
+            paramType = "header"
+    )
+    public ResponseEntity<VoteDto> list(@RequestHeader(value = "Authorization") String authorization, @RequestParam UUID movie) throws Exception {
+
+        logger.debug(LoggingHelper.logInboundRequest("GET: /votes?movie=" + movie));
+
+        UUID accessToken = SecurityHelper.getAccessToken(authorization);
+        VoteDto vote = service.list(accessToken, movie);
+        ResponseEntity response = ResponseEntity.status(HttpStatus.OK).body(vote);
 
         logger.debug(LoggingHelper.logInboundResponse(response));
 

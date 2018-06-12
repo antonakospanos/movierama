@@ -1,5 +1,6 @@
 package org.antonakospanos.movierama.service;
 
+import javassist.NotFoundException;
 import org.antonakospanos.movierama.dao.model.Movie;
 import org.antonakospanos.movierama.dao.model.User;
 import org.antonakospanos.movierama.dao.repository.MovieRepository;
@@ -108,5 +109,33 @@ public class VoteService {
         logger.info(result);
 
         return result;
+    }
+
+    @Transactional
+    public VoteDto list(UUID userExternalId, UUID movieExternalId) throws Exception {
+        VoteDto vote = new VoteDto(movieExternalId);
+        Movie movie = movieRepository.findByExternalId(movieExternalId);
+        User user = userService.find(userExternalId);
+
+        if (movie == null) {
+            throw new IllegalArgumentException("Movie with ID '" + movieExternalId + "' does not exists!");
+        } if (user == null) {
+            throw new IllegalArgumentException("Access token '" + userExternalId + "' is not valid!");
+        } else {
+            Set<User> fans = movie.getFans();
+            Set<User> haters = movie.getHaters();
+
+            if (fans.contains(user)) {
+                vote.setLike(true);
+            } else if (haters.contains(user)) {
+                vote.setLike(false);
+            } else {
+                throw new NotFoundException(user.getName() + " has not voted '" + movie.getTitle() + "' yet!");
+            }
+        }
+
+        logger.info("User " + user.getName() + " checked vote" + vote);
+
+        return vote;
     }
 }
