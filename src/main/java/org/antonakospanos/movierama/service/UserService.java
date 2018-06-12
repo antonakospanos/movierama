@@ -42,11 +42,15 @@ public class UserService {
 
     @Transactional
     public CreateResponseData create(UserBaseDto userBaseDto) {
+        User user;
         UserDto userDto = new UserDto(userBaseDto);
-        User user = userRepository.findByUsername(userDto.getUsername());
+        User userWithUsername = userRepository.findByUsername(userDto.getUsername());
+        User userWithEmail = userRepository.findByEmail(userDto.getEmail());
 
-        if (user != null) {
-            throw new IllegalArgumentException("User with username '" + user.getUsername() + "' already exists!");
+        if (userWithUsername != null) {
+            throw new IllegalArgumentException("User with username '" + userDto.getUsername() + "' already exists!");
+        } else if (userWithEmail != null) {
+            throw new IllegalArgumentException("User with email '" + userDto.getEmail() + "' already exists!");
         } else {
             // Add new User in DB
             user = userDto.toEntity();

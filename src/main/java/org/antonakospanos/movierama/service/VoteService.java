@@ -43,9 +43,9 @@ public class VoteService {
             if (user.equals(publisher)) {
                 throw new Exception("The vote is rejected. " + publisher.getName() + " is the publisher of '" + movie.getTitle() + "'!");
             } else if (fans.contains(user) && voteDto.isLike()) {
-                throw new Exception(user.getName() + " has already submitted a positive vote to '" + movie.getTitle() + "'!");
+                throw new Exception(user.getName() + " has already voted' " + movie.getTitle() + "' positively!");
             } else if (haters.contains(user) && !voteDto.isLike()) {
-                throw new Exception(user.getName() + " has already submitted a negative vote to '" + movie.getTitle() + "'!");
+                throw new Exception(user.getName() + " has already voted' " + movie.getTitle() + "' negatively!");
             } else if (fans.contains(user) && !voteDto.isLike()) {
                 // Change vote to a hate!
                 movie.removeFan(user);
