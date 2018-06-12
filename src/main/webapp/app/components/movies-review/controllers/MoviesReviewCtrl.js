@@ -2,12 +2,12 @@
 	"use strict";
 	angular
 		.module("MovieRamaUi")
-		.controller("MoviesReviewCtrl", ["$scope", "$http", "$state", MoviesReviewCtrl]);
+		.controller("MoviesReviewCtrl", ["$rootScope", "$scope", "$http", "$state", MoviesReviewCtrl]);
 
-	function MoviesReviewCtrl($scope, $http, $state) {
+	function MoviesReviewCtrl($rootScope, $scope, $http, $state) {
 		var ctrl = this;
-        var voteMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/votes";
-        var listMoviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
+        var voteMoviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/votes";
+        var listMoviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
 
         if ($state.params.publisher !== undefined && $state.params.publisher.id !== undefined) {
             listMoviesUrl = listMoviesUrl + "?userId=" + $state.params.publisher.id;

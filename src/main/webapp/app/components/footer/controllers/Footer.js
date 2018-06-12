@@ -3,9 +3,9 @@
     "use strict";
     angular
         .module("MovieRamaUi")
-        .controller("FooterCtrl", ["$scope", "$http", "$mdToast", FooterCtrl]);
+        .controller("FooterCtrl", ["$rootScope", "$scope", "$http", "$mdToast", FooterCtrl]);
 
-    function FooterCtrl($scope, $http, $mdToast) {
+    function FooterCtrl($rootScope, $scope, $http, $mdToast) {
 
         // Auto refresh footer every 5 seconds to re-calculate backend changes
         $scope.intervalTimer = setInterval(function () {
@@ -22,7 +22,7 @@
         }
 
         function refreshMovies() {
-            var moviesUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
+            var moviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
 
             // Lookup for /movies
             $http.get(moviesUrl)

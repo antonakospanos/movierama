@@ -2,11 +2,11 @@
 	"use strict";
 	angular
 		.module("MovieRamaUi")
-		.controller("MoviesAddCtrl", ["$scope", "$http", "$state", MoviesAddCtrl]);
+		.controller("MoviesAddCtrl", ["$rootScope", "$scope", "$http", "$state", MoviesAddCtrl]);
 
-	function MoviesAddCtrl($scope, $http, $state) {
+	function MoviesAddCtrl($rootScope, $scope, $http, $state) {
         var ctrl = this;
-        ctrl.addFlowUrl = "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
+        ctrl.addFlowUrl = "http://" + $rootScope.backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
 
         ctrl.init = function() {
             $scope.movie = {};

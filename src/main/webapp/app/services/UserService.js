@@ -5,8 +5,8 @@
         .module('MovieRamaUi')
         .factory('UserService', UserService);
 
-    UserService.$inject = ['$http'];
-    function UserService($http) {
+    UserService.$inject = ['$http', "$rootScope"];
+    function UserService($http, $rootScope) {
         var service = {};
         service.GetUrl = GetUrl;
         service.GetById = GetById;
@@ -15,7 +15,7 @@
         return service;
 
         function GetUrl() {
-            return "http://" + backend_ip + ":" + backend_port + "/" + backend_context_path + "/users";
+            return "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/users";
         }
 
         function GetById(id) {
