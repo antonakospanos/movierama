@@ -1,6 +1,7 @@
 package org.antonakospanos.movierama.web.dto.movies;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.movierama.dao.model.Movie;
 import org.antonakospanos.movierama.web.dto.Dto;
 import org.antonakospanos.movierama.web.dto.users.UserDto;
@@ -9,18 +10,22 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * MovieDto
  */
-@JsonPropertyOrder({ "title", "description", "publisher", "publicationDate", "likes", "hates" })
+@JsonPropertyOrder({ "id", "title", "description", "publisher", "publicationDate", "likes", "hates" })
 public class MovieDto extends MovieBaseDto implements Dto<Movie> {
 
 	public static List<String> fields = Arrays.asList(MovieBaseDto.class.getDeclaredFields())
 			.stream()
 			.map(field -> field.getName())
 			.collect(Collectors.toList());
+
+	@ApiModelProperty(example = "6b6f2985-ae5b-46bc-bad1-f9176ab90171")
+	private UUID id;
 
 	private UserDto publisher;
 
@@ -37,12 +42,12 @@ public class MovieDto extends MovieBaseDto implements Dto<Movie> {
 		super(movieBaseDto.getTitle(), movieBaseDto.getDescription());
 	}
 
-	public static List<String> getFields() {
-		return fields;
+	public UUID getId() {
+		return id;
 	}
 
-	public static void setFields(List<String> fields) {
-		MovieDto.fields = fields;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public UserDto getPublisher() {
@@ -79,6 +84,7 @@ public class MovieDto extends MovieBaseDto implements Dto<Movie> {
 
 	@Override
 	public MovieDto fromEntity(Movie movie) {
+		setId(movie.getExternalId());
         setTitle(movie.getTitle());
         setDescription(movie.getDescription());
 		setPublicationDate(movie.getPublicationDate());

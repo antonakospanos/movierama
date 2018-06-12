@@ -28,11 +28,11 @@ public class VoteService {
     public String put(UUID userExternalId, VoteDto voteDto) throws Exception {
         String result;
 
-        Movie movie = movieRepository.findByTitle(voteDto.getTitle());
+        Movie movie = movieRepository.findByExternalId(voteDto.getMovie());
         User user = userService.find(userExternalId);
 
         if (movie == null) {
-            throw new IllegalArgumentException("Movie '" + voteDto.getTitle() + "' does not exists!");
+            throw new IllegalArgumentException("Movie with ID '" + voteDto.getMovie() + "' does not exists!");
         } if (user == null) {
             throw new IllegalArgumentException("Access token '" + userExternalId + "' is not valid!");
         } else {
@@ -41,11 +41,11 @@ public class VoteService {
             Set<User> haters = movie.getHaters();
 
             if (user.equals(publisher)) {
-                throw new Exception("The vote is rejected. " + publisher.getName() + " is the publisher of '" + movie.getTitle() + "'!");
+                throw new Exception(publisher.getName() + " is the publisher of '" + movie.getTitle() + "'!");
             } else if (fans.contains(user) && voteDto.isLike()) {
-                throw new Exception(user.getName() + " has already voted' " + movie.getTitle() + "' positively!");
+                throw new Exception(user.getName() + " has already voted '" + movie.getTitle() + "' positively!");
             } else if (haters.contains(user) && !voteDto.isLike()) {
-                throw new Exception(user.getName() + " has already voted' " + movie.getTitle() + "' negatively!");
+                throw new Exception(user.getName() + " has already voted '" + movie.getTitle() + "' negatively!");
             } else if (fans.contains(user) && !voteDto.isLike()) {
                 // Change vote to a hate!
                 movie.removeFan(user);
@@ -76,5 +76,37 @@ public class VoteService {
 
             return result;
         }
+    }
+
+    @Transactional
+    public String delete(UUID userExternalId, UUID movieExternalId) throws Exception {
+        String result;
+        Movie movie = movieRepository.findByExternalId(movieExternalId);
+        User user = userService.find(userExternalId);
+
+        if (movie == null) {
+            throw new IllegalArgumentException("Movie with ID '" + movieExternalId + "' does not exists!");
+        } if (user == null) {
+            throw new IllegalArgumentException("Access token '" + userExternalId + "' is not valid!");
+        } else {
+            Set<User> fans = movie.getFans();
+            Set<User> haters = movie.getHaters();
+
+            if (fans.contains(user)) {
+                movie.removeFan(user);
+                movieRepository.save(movie);
+                result = "A positive vote to '" + movie.getTitle() + "' was retracted by " + user.getName();
+            } else if (haters.contains(user)) {
+                movie.removeHater(user);
+                result = "A negative vote to '" + movie.getTitle() + "' was retracted by " + user.getName();
+                movieRepository.save(movie);
+            } else {
+                throw new Exception(user.getName() + " has not voted '" + movie.getTitle() + "' yet!");
+            }
+        }
+
+        logger.info(result);
+
+        return result;
     }
 }

@@ -4,30 +4,30 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 /**
- * AccountDto
+ * VoteDto
  */
-@JsonPropertyOrder({ "title", "like" })
+@JsonPropertyOrder({ "movie", "like" })
 @Component
 public class VoteDto {
 
-	@NotEmpty
-	@ApiModelProperty(example = "Star Wars", required = true)
-	private String title;
+	@NotNull
+	@ApiModelProperty(example = "6b6f2985-ae5b-46bc-bad1-f9176ab90171", required = true)
+	private UUID movie;
 
 	@NotNull
 	@ApiModelProperty(example = "true", required = true)
 	private boolean like;
 
-	public String getTitle() {
-		return title;
+	public UUID getMovie() {
+		return movie;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setMovie(UUID movie) {
+		this.movie = movie;
 	}
 
 	public boolean isLike() {

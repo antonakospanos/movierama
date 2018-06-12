@@ -13,6 +13,11 @@ public class CreateResponse extends Response {
 		return this;
 	}
 
+	public CreateResponse description(String description) {
+		setDescription(description);
+		return this;
+	}
+
 	public CreateResponse build(Result result) {
 		setResult(result);
 		setDescription(result.getDescription());

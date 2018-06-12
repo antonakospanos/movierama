@@ -168,7 +168,7 @@
 						}
                     	var body = {
                             "like": true,
-                            "title": item.title
+                            "movie": item.id
 						}
                         $http.put(voteMoviesUrl, body, { headers: headers })
                             .then(function successCallback(response) {
@@ -199,7 +199,7 @@
                         }
                         var body = {
                             "like": false,
-                            "title": item.title
+                            "movie": item.id
                         }
                         $http.put(voteMoviesUrl, body, { headers: headers })
                             .then(function successCallback(response) {
@@ -214,6 +214,44 @@
                             });
                     }
                 });
+        }
+
+
+        /**
+         *  Retract vote!
+         *
+         * @param item
+         */
+        ctrl.retract = function (item) {
+            $scope.modalAlert("Do you want to retract the vote to '" + item.title + "' ?", "RETRACT")
+                .then(function (response) {
+                    if (response === true) {
+
+                        var headers = {
+                            "Authorization": $http.defaults.headers.common.Authorization
+                        }
+                        $http.delete(voteMoviesUrl + "?movie=" + item.id, null, { headers: headers })
+                            .then(function successCallback(response) {
+                                console.log("INFO:" + response.data);
+                                $scope.createToast(response.data.result + "! " + response.data.description)
+                                ctrl.listMovies()
+                                $scope.scrollTop();
+                            }, function errorCallback(response) {
+                                console.log("ERROR: " + response.data);
+                                $scope.createToast(response.data.result + "! " + response.data.description)
+                                $scope.scrollTop();
+                            });
+                    }
+                });
+        }
+
+        /**
+         *  Hide voting buttons to un-subscribed users!
+         *
+         * @param item
+         */
+        ctrl.hideVotingButtons= function (item) {
+            return !$http.defaults.headers.common.Authorization
         }
 	}
 }());

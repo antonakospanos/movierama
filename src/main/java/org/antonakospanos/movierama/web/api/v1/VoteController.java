@@ -4,7 +4,6 @@ import io.swagger.annotations.*;
 import org.antonakospanos.movierama.service.VoteService;
 import org.antonakospanos.movierama.support.LoggingHelper;
 import org.antonakospanos.movierama.web.api.BaseMovieRamaController;
-import org.antonakospanos.movierama.web.dto.response.CreateResponse;
 import org.antonakospanos.movierama.web.dto.response.ResponseBase;
 import org.antonakospanos.movierama.web.dto.votes.VoteDto;
 import org.antonakospanos.movierama.web.enums.Result;
@@ -30,7 +29,7 @@ public class VoteController extends BaseMovieRamaController {
     VoteService service;
 
     @RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"}, method = RequestMethod.PUT)
-    @ApiOperation(value = "Adds or updates a vote to the movie", response = CreateResponse.class)
+    @ApiOperation(value = "Adds or updates a vote to the movie", response = ResponseBase.class)
     @ApiImplicitParam(
             name = "Authorization",
             value = "Bearer <The user's access token obtained upon registration or authentication>",
@@ -52,6 +51,33 @@ public class VoteController extends BaseMovieRamaController {
         String result = service.put(accessToken, voteDto);
         ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS).description(result);
         response = ResponseEntity.ok().body(responseBase);
+
+        logger.debug(LoggingHelper.logInboundResponse(response));
+
+        return response;
+    }
+
+
+    @ApiOperation(value = "Deletes a vote on the movie", response = ResponseBase.class)
+    @RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.DELETE)
+    @ApiImplicitParam(
+            name = "Authorization",
+            value = "Bearer <The user's access token obtained upon registration or authentication>",
+            example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+            required = true,
+            dataType = "string",
+            paramType = "header"
+    )
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ResponseBase> delete(@RequestHeader(value = "Authorization") String authorization, @RequestParam (required = true) UUID movie) throws Exception {
+        ResponseEntity<ResponseBase> response;
+        logger.debug(LoggingHelper.logInboundRequest("DELETE: " + movie));
+
+        UUID accessToken = SecurityHelper.getAccessToken(authorization);
+        String result = service.delete(accessToken, movie);
+        ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS).description(result);
+        response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
 
         logger.debug(LoggingHelper.logInboundResponse(response));
 
