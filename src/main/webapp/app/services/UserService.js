@@ -15,7 +15,7 @@
         return service;
 
         function GetUrl() {
-            return "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/users";
+            return backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/users";
         }
 
         function GetById(id) {

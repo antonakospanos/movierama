@@ -6,8 +6,8 @@
 
 	function MoviesReviewCtrl($rootScope, $scope, $http, $state) {
 		var ctrl = this;
-        var voteMoviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/votes";
-        var listMoviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
+        var voteMoviesUrl = backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/votes";
+        var listMoviesUrl = backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
 
         if ($state.params.publisher !== undefined && $state.params.publisher.id !== undefined) {
             listMoviesUrl = listMoviesUrl + "?userId=" + $state.params.publisher.id;

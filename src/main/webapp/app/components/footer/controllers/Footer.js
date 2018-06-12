@@ -22,7 +22,7 @@
         }
 
         function refreshMovies() {
-            var moviesUrl = "http://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
+            var moviesUrl = backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
 
             // Lookup for /movies
             $http.get(moviesUrl)
