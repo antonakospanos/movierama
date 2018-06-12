@@ -6,7 +6,7 @@
 
 	function MoviesAddCtrl($rootScope, $scope, $http, $state) {
         var ctrl = this;
-        ctrl.addFlowUrl = backend_protocol + "://" + $rootScope.backend_ip + ":" + backend_port + "/" + backend_context_path + "/movies";
+        ctrl.addFlowUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/movies";
 
         ctrl.init = function() {
             $scope.movie = {};
