@@ -19,7 +19,7 @@
                         AuthenticationService.Authorize(ctrl.username, response.data.data.id);
                         $scope.loggedIn();
                         $state.go("movies_review");
-                        // $location.path("/movies");
+                        // $location.path("/");
                     }
                 });
         }

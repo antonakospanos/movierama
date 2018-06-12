@@ -11,16 +11,13 @@
      */
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
     function config($stateProvider, $urlRouterProvider) {
-        // Movies Add after login
-        $stateProvider.state("movies_add", {
-            url: "/movies/add",
-            templateUrl: "app/components/movies-add/views/moviesAdd.html",
-        });
+
         // Movies Review (homepage)
         $stateProvider.state("movies_review", {
-            url: "/movies",
+            url: "/",
             templateUrl: "app/components/movies-review/views/moviesReview.html",
         });
+
         // Movies Review (specified publisher)
         $stateProvider.state("movies_publisher_review", {
             url: "/publisher",
@@ -33,12 +30,12 @@
                 }
             }
         });
-        // Movies Review after logout
-        $stateProvider.state("logout", {
-            url: "/movies",
-            templateUrl: "app/components/movies-review/views/moviesReview.html",
-            controller: "LogoutCtrl" ,
+        // Movies Add after login
+        $stateProvider.state("movies_add", {
+            url: "/add",
+            templateUrl: "app/components/movies-add/views/moviesAdd.html",
         });
+
         // User Login form
         $stateProvider.state("login", {
             url: "/login",
@@ -49,8 +46,15 @@
             url: "/register",
             templateUrl: "app/components/register/views/register.html",
         });
+        // Movies Review after logout
+        $stateProvider.state("logout", {
+            url: "/",
+            templateUrl: "app/components/movies-review/views/moviesReview.html",
+            controller: "LogoutCtrl" ,
+        });
+
         // Homepage
-        $urlRouterProvider.otherwise("/movies");
+        $urlRouterProvider.otherwise("/");
     };
 
     /**
@@ -76,12 +80,19 @@
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + $rootScope.globals.currentUser.token;
         }
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+
+        /**
+         *  Redirect to homepage if the user is not logged in and is trying to access a restricted page!
+         *
+         *  Tip:
+         *  Uses stored 'globals.currentUser' information from his cookie
+         */
+        $rootScope.$on('$locationChangeStart', function () {
+            var restrictedPage = $.inArray($location.path(), ['/', 'publisher', '/login', '/register']) === -1;
+
             var loggedIn = $rootScope.globals.currentUser;
             if (restrictedPage && !loggedIn) {
-                $location.path('/login');
+                $location.path('/');
             }
         });
 

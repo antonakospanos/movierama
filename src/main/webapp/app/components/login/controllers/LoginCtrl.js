@@ -24,7 +24,7 @@
                         $scope.loggedIn();
                         $scope.createToast("User '" + ctrl.username + "' logged in successfully")
                         $state.go("movies_review");
-                        // $location.path("/movies");
+                        // $location.path("/");
                     } else {
                         $scope.createToast(response.data.result + "! " + response.data.description)
                     }
