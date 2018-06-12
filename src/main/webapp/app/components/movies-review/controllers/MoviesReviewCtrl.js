@@ -170,7 +170,7 @@
                             "like": true,
                             "title": item.title
 						}
-                        $http.post(voteMoviesUrl, body, { headers: headers })
+                        $http.put(voteMoviesUrl, body, { headers: headers })
                             .then(function successCallback(response) {
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 ctrl.listMovies()
@@ -201,7 +201,7 @@
                             "like": false,
                             "title": item.title
                         }
-                        $http.post(voteMoviesUrl, body, { headers: headers })
+                        $http.put(voteMoviesUrl, body, { headers: headers })
                             .then(function successCallback(response) {
                                 console.log("INFO:" + response.data);
                                 $scope.createToast(response.data.result + "! " + response.data.description)

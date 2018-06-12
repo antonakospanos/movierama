@@ -140,4 +140,20 @@ public class Movie implements Serializable {
 
 		this.haters.add(user);
 	}
+
+	public void removeFan(User user) {
+		if (this.fans == null) {
+			this.fans = new HashSet<>();
+		}
+
+		this.fans.remove(user);
+	}
+
+	public void removeHater(User user) {
+		if (this.haters == null) {
+			this.haters = new HashSet<>();
+		}
+
+		this.haters.remove(user);
+	}
 }

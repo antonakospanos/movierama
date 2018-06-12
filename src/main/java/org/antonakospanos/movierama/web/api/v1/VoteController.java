@@ -29,8 +29,8 @@ public class VoteController extends BaseMovieRamaController {
     @Autowired
     VoteService service;
 
-    @RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"}, method = RequestMethod.POST)
-    @ApiOperation(value = "Adds a positive or negative vote to the movie", response = CreateResponse.class)
+    @RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"}, method = RequestMethod.PUT)
+    @ApiOperation(value = "Adds or updates a vote to the movie", response = CreateResponse.class)
     @ApiImplicitParam(
             name = "Authorization",
             value = "Bearer <The user's access token obtained upon registration or authentication>",
@@ -39,19 +39,19 @@ public class VoteController extends BaseMovieRamaController {
             dataType = "string",
             paramType = "header"
     )
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "The vote is added!", response = ResponseBase.class),
+            @ApiResponse(code = 200, message = "The vote is accepted!", response = ResponseBase.class),
             @ApiResponse(code = 400, message = "The request is invalid!"),
             @ApiResponse(code = 500, message = "server error")})
-    public ResponseEntity<ResponseBase> create(@RequestHeader(value = "Authorization") String authorization, @Valid @RequestBody VoteDto voteDto) throws Exception {
+    public ResponseEntity<ResponseBase> put(@RequestHeader(value = "Authorization") String authorization, @Valid @RequestBody VoteDto voteDto) throws Exception {
         ResponseEntity<ResponseBase> response;
         logger.debug(LoggingHelper.logInboundRequest(voteDto));
 
         UUID accessToken = SecurityHelper.getAccessToken(authorization);
-        service.create(accessToken, voteDto);
-        ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-        response = ResponseEntity.status(HttpStatus.CREATED).body(responseBase);
+        String result = service.put(accessToken, voteDto);
+        ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS).description(result);
+        response = ResponseEntity.ok().body(responseBase);
 
         logger.debug(LoggingHelper.logInboundResponse(response));
 

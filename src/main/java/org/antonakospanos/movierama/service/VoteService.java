@@ -3,7 +3,6 @@ package org.antonakospanos.movierama.service;
 import org.antonakospanos.movierama.dao.model.Movie;
 import org.antonakospanos.movierama.dao.model.User;
 import org.antonakospanos.movierama.dao.repository.MovieRepository;
-import org.antonakospanos.movierama.web.dto.response.CreateResponseData;
 import org.antonakospanos.movierama.web.dto.votes.VoteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class VoteService {
@@ -28,7 +25,9 @@ public class VoteService {
     UserService userService;
 
     @Transactional
-    public CreateResponseData create(UUID userExternalId, VoteDto voteDto) throws Exception {
+    public String put(UUID userExternalId, VoteDto voteDto) throws Exception {
+        String result;
+
         Movie movie = movieRepository.findByTitle(voteDto.getTitle());
         User user = userService.find(userExternalId);
 
@@ -41,30 +40,41 @@ public class VoteService {
             Set<User> fans = movie.getFans();
             Set<User> haters = movie.getHaters();
 
-            Set<Long> voters =
-                    Stream.of(fans, haters)
-                    .flatMap(Set::stream)
-                    .map(voter -> voter.getId())
-                    .collect(Collectors.toSet());
-
-            if (user.getId().equals(publisher.getId())) {
+            if (user.equals(publisher)) {
                 throw new Exception("The vote is rejected. " + publisher.getName() + " is the publisher of '" + movie.getTitle() + "'!");
-            } else if (voters.contains(user.getId())) {
-                throw new Exception("The vote is rejected. " + user.getName() + " has already voted for movie '" + movie.getTitle() + "'!");
+            } else if (fans.contains(user) && voteDto.isLike()) {
+                throw new Exception(user.getName() + " has already submitted a positive vote to '" + movie.getTitle() + "'!");
+            } else if (haters.contains(user) && !voteDto.isLike()) {
+                throw new Exception(user.getName() + " has already submitted a negative vote to '" + movie.getTitle() + "'!");
+            } else if (fans.contains(user) && !voteDto.isLike()) {
+                // Change vote to a hate!
+                movie.removeFan(user);
+                movie.addHater(user);
+                movieRepository.save(movie);
+                result = user.getName() + " changed the '" + movie.getTitle() + " vote to a hate!";
+            } else if (haters.contains(user) && voteDto.isLike()) {
+                // Change vote to a like!
+                movie.removeHater(user);
+                movie.addFan(user);
+                movieRepository.save(movie);
+                result = user.getName() + " changed the '" + movie.getTitle() + " vote to a like!";
             } else {
+                // New vote!
                 String vote;
                 if (voteDto.isLike()) {
-                    vote = "like";
+                    vote = "positive vote";
                     movie.addFan(user);
                 } else {
-                    vote = "hate";
+                    vote = "negative vote";
                     movie.addHater(user);
                 }
                 movieRepository.save(movie);
-                logger.info(user.getName()+" added a "+vote+" for movie: " + movie.getTitle());
+                result = "A " +vote+" to '" + movie.getTitle() + "' was added by " + user.getName();
             }
-        }
 
-        return new CreateResponseData(movie.getExternalId().toString());
+            logger.info(result);
+
+            return result;
+        }
     }
 }
