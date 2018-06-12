@@ -54,7 +54,7 @@
         }
 
         ctrl.add = function() {
-            var message = "This will publish '"+$scope.title +"' to MovieRama. Proceed?";
+            var message = "This will publish '"+$scope.movie.title +"' to MovieRama. Proceed?";
             var config = {
                 headers : {
                     'Content-Type': 'application/json;charset=utf-8;'
