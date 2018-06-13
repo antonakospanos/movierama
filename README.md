@@ -13,7 +13,7 @@ MovieRama is a social sharing platform where users can share their favorite movi
 
 From a machine with docker installed + internet access, execute:
 
-    docker run -p 5432:5432 --title rdbms -e POSTGRES_PASSWORD=postgres -d postgres:9.4
+    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=postgres -d postgres:9.4
 
 Make sure your hosts file maps rdbms yearEnd localhost
 
@@ -22,10 +22,10 @@ Make sure your hosts file maps rdbms yearEnd localhost
 Init or migrate the database schema
 
     Init the database
-    mvn clean install -DskipTests -Ddb.host=rdbms -Ddb.port=5432 -Ddb.module.database.title=movierama -Ddb.module.userId=movierama -Ddb.module.password=movierama -Ddb.root.password=postgres -Dinit.database.skip=false flyway:migrate
+    mvn clean install -DskipTests -Ddb.host=rdbms -Ddb.port=5432 -Ddb.module.database.name=movierama -Ddb.module.userId=movierama -Ddb.module.password=movierama -Ddb.root.password=postgres -Dinit.database.skip=false flyway:migrate
     
     Migrate an existing database
-    mvn clean install -DskipTests -Ddb.host=rdbms -Ddb.port=5432 -Ddb.module.database.title=movierama -Ddb.module.userId=movierama -Ddb.module.password=movierama flyway:migrate
+    mvn clean install -DskipTests -Ddb.host=rdbms -Ddb.port=5432 -Ddb.module.database.name=movierama -Ddb.module.userId=movierama -Ddb.module.password=movierama flyway:migrate
 
 ##### Application Configuration
 
@@ -43,5 +43,5 @@ $CATALINA_HOME/bin/startup.sh   --Dspring.config.location=movierama-application.
 ```
 ```
 docker build -t movierama .
-docker run -p 8080:8080 -p 443:443 -p 80:80 -d --title movierama -d movierama   -e SPRING_CONFIG_LOCATION=movierama-application.yml
+docker run -p 8080:8080 -p 443:443 -p 80:80 -d --name movierama -d movierama   -e SPRING_CONFIG_LOCATION=movierama-application.yml
 ```
