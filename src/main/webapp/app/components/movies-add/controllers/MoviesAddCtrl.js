@@ -67,9 +67,9 @@
                             .then(function successCallback(response) {
                                 $scope.refreshMovies();
                                 $state.go("movies_review");
-                                // Reload footer's img
+                                // Reload footer's img to switch from alert to check-mark!
                                 $scope.createToast(response.data.result + "! " + response.data.description)
-                                if ($rootScope.movies === 0 || $rootScope.movies === 1) {
+                                if ($rootScope.movies === 0) {
                                   location.reload();
                                 } else {
                                   $scope.scrollTop();
