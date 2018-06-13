@@ -8,9 +8,9 @@
     function FooterCtrl($rootScope, $scope, $http, $mdToast) {
 
         // Auto refresh footer every 5 seconds to re-calculate backend changes
-        $scope.intervalTimer = setInterval(function () {
-            $scope.refreshMovies()
-        }, 5000);
+        // $scope.intervalTimer = setInterval(function () {
+        //     $scope.refreshMovies()
+        // }, 5000);
 
         $scope.refreshMovies = function() {
             refreshMovies();
@@ -27,18 +27,18 @@
             // Lookup for /movies
             $http.get(moviesUrl)
                 .then(function successCallback(response) {
-                    var movies = response.data.length;
+                    $rootScope.movies = response.data.length;
                     setConfigCheck('display')
                     setConfigAlert('none')
-                    setConfigPrompt(movies + " movies stored in MovieRama");
+                    setConfigPrompt($rootScope.movies + " movies stored in MovieRama");
                 }, function errorCallback(response) {
-                    var movies = response.data.length;
+                   $rootScope.movies = response.data.length;
                     setConfigCheck('none')
                     setConfigAlert('display')
-                    if (movies === undefined) {
+                    if ($rootScope.movies === undefined) {
                         setConfigPrompt("Could not find movies in MovieRama");
                     } else {
-                        setConfigPrompt(movies + " movies stored in MovieRama");
+                        setConfigPrompt($rootScope.movies + " movies stored in MovieRama");
                     }
                 });
         }

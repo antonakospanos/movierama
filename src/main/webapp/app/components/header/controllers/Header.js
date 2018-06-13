@@ -26,7 +26,7 @@
             }
         }
 
-        $scope.initHeader = function initFooter() {
+        $scope.initHeader = function initHeader() {
             $scope.refreshHeader()
         }
 

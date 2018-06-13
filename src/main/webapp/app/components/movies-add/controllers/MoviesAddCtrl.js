@@ -65,9 +65,15 @@
                     if (response === true) {
                         $http.post(ctrl.addFlowUrl, $scope.movie, config)
                             .then(function successCallback(response) {
+                                $scope.refreshMovies();
                                 $state.go("movies_review");
-                                $scope.scrollTop();
+                                // Reload footer's img
                                 $scope.createToast(response.data.result + "! " + response.data.description)
+                                if ($rootScope.movies === 0 || $rootScope.movies === 1) {
+                                  location.reload();
+                                } else {
+                                  $scope.scrollTop();
+                                }
                             }, function errorCallback(response) {
                                 $scope.createToast(response.data.result + "! " + response.data.description)
                                 // var message = response.data.result + "<br/>" + response.data.description;
