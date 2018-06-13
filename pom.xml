@@ -22,7 +22,7 @@
 		<db.root.userId>postgres</db.root.userId>
 		<init.database.skip>true</init.database.skip>
 		<db.create_db_extra />
-		<db.module.url>jdbc:postgresql://${db.host}:${db.port}/${db.module.database.title}</db.module.url>
+		<db.module.url>jdbc:postgresql://${db.host}:${db.port}/${db.module.database.name}</db.module.url>
 		<db.module.userId>${module.userId}</db.module.userId>
 		<db.module.password>${module.password}</db.module.password>
 
@@ -244,10 +244,10 @@
 						</goals>
 						<configuration>
 							<sqlCommand>
-								DROP DATABASE IF EXISTS ${db.module.database.title};
+								DROP DATABASE IF EXISTS ${db.module.database.name};
 								DROP USER IF EXISTS ${db.module.userId};
 								CREATE USER ${db.module.userId} LOGIN PASSWORD '${db.module.password}' NOCREATEDB NOCREATEROLE NOREPLICATION VALID UNTIL 'infinity';
-								CREATE DATABASE ${db.module.database.title} WITH ENCODING='UTF8' ${db.create_db_extra} OWNER=${db.module.userId} CONNECTION LIMIT=-1;
+								CREATE DATABASE ${db.module.database.name} WITH ENCODING='UTF8' ${db.create_db_extra} OWNER=${db.module.userId} CONNECTION LIMIT=-1;
 							</sqlCommand>
 							<skip>${init.database.skip}</skip>
 						</configuration>
