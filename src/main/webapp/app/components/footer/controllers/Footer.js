@@ -17,6 +17,9 @@
         }
 
         $scope.initFooter = function initFooter() {
+            setConfigCheck('none')
+            setConfigAlert('initial')
+            setConfigPrompt("The backend server is starting...");
             setProgressBar('none')
             refreshMovies();
         }
@@ -28,13 +31,13 @@
             $http.get(moviesUrl)
                 .then(function successCallback(response) {
                     $rootScope.movies = response.data.length;
-                    setConfigCheck('display')
+                    setConfigCheck('initial')
                     setConfigAlert('none')
                     setConfigPrompt($rootScope.movies + " movies stored in MovieRama");
                 }, function errorCallback(response) {
                    $rootScope.movies = response.data.length;
                     setConfigCheck('none')
-                    setConfigAlert('display')
+                    setConfigAlert('initial')
                     if ($rootScope.movies === undefined) {
                         setConfigPrompt("Could not find movies in MovieRama");
                     } else {
