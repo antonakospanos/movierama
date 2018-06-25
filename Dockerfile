@@ -4,11 +4,9 @@ LABEL maintainer="antonakospanos.gmail.com"
 
 # Provision Tomcat with movierama webapp, keystore and server.xml
 COPY target/movierama*.war $CATALINA_HOME/webapps/movierama.war
-COPY src/main/resources/ssl/movierama.keystore /opt/tomcat/conf/localhost-rsa.jks
-COPY src/conf/tomcat/server.xml /opt/tomcat/conf/server.xml
-
-# Add env variables
-ENV SPRING_CONFIG_LOCATION /opt/tomcat/conf/
+COPY src/main/resources/ssl/movierama.keystore $CATALINA_HOME/conf/localhost-rsa.jks
+COPY src/conf/tomcat/server.xml $CATALINA_HOME/conf/server.xml
+COPY src/conf/tomcat/tomcat-users.xml $CATALINA_HOME/conf/tomcat-users.xml
 
 # Expose Ports
 EXPOSE 8080

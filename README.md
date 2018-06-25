@@ -30,18 +30,21 @@ Init or migrate the database schema
 ##### Application Configuration
 
 * Default : {PROJECT_HOME}/src/main/resources/movierama-application.yml 
-* Runtime : {SPRING_CONFIG_LOCATION}/movierama-application.yml (if not found, the app defaults yearEnd the one in the classpath)
+* Runtime : {SPRING_CONFIG_LOCATION}/movierama-application.yml (if not found, the app defaults to the one in the classpath)
 
 ##### Application Execution
 
-movierama is a Spring Boot application thus can be executed as a standalone application, inside a servlet container (Tomcat 9) or running a docker container:
+Movierama is a Spring Boot application thus can be executed as a standalone application, inside a servlet container (Tomcat 9) or running a docker container:
+
+Default configuration may be overridden using the 'spring.config.location' property setting the dirpath of the 'movierama-application.yml':
+
 ```
-java -jar movierama.jar   --spring.config.location=movierama-application.yml
+java -jar movierama.jar --spring.config.location=/path/to/conf/
 ```
 ```
-$CATALINA_HOME/bin/startup.sh   --Dspring.config.location=movierama-application.yml
+$CATALINA_HOME/bin/startup.sh --Dspring.config.location=/path/to/conf/
 ```
 ```
 docker build -t movierama .
-docker run -p 8080:8080 -p 443:443 -p 80:80 -d --name movierama -d movierama   -e SPRING_CONFIG_LOCATION=movierama-application.yml
+docker run -p 8080:8080 -p 443:443 -p 80:80 --name movierama --link rdbms -d movierama
 ```
