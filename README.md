@@ -39,7 +39,7 @@ Movierama is a Spring Boot application thus can be executed as a standalone appl
 Default configuration may be overridden using the 'spring.config.location' property setting the dirpath of the 'movierama-application.yml':
 
 ```
-java -jar movierama.jar --spring.config.location=/path/to/conf/
+mvn spring-boot:run --spring.config.location=/path/to/conf/
 ```
 ```
 $CATALINA_HOME/bin/startup.sh --Dspring.config.location=/path/to/conf/
