@@ -1,12 +1,3 @@
-/**
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates and open the template in the editor.
- *
- * All Margins/Paddings should be N*8 pixels N=1,2,3..
- *
- * @author kostas.lanos
- */
-@
 -moz-document url-prefix() {
     fieldset { display: table-cell; }
 }
