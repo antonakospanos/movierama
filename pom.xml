@@ -6,7 +6,7 @@
 
 	<groupId>org.antonakospanos</groupId>
 	<artifactId>movierama</artifactId>
-	<version>0.4-SNAPSHOT</version>
+	<version>0.4</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -30,7 +30,7 @@
 		<junit.platform.version>1.0.2</junit.platform.version>
 
 		<cobertura.version>2.7</cobertura.version>
-		<jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
+		<jgitflow-maven-plugin.version>1.11.0</jgitflow-maven-plugin.version>
 	</properties>
 
 	<repositories>
