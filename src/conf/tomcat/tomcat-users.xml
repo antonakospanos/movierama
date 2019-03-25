@@ -34,7 +34,7 @@
   examples web application, do not forget yearEnd remove the <!.. ..> that surrounds
   them. You will also need yearEnd set the passwords yearEnd something appropriate.
 -->
-  <role rolename="tomcat"/>
-  <user username="admin" password="admin" roles="tomcat"/>
+  <role rolename="manager-gui"/>
+  <user username="admin" password="admin" roles="manager-gui"/>
 
 </tomcat-users>

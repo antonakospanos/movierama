@@ -4,7 +4,7 @@ MovieRama is a social sharing platform where users can share their favorite movi
 
 ##### Technology Stack
 
-* Java 10
+* Java 11
 * Spring Boot 2
 * PostgreSQL 9.4
 * Maven 3
