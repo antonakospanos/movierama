@@ -6,7 +6,7 @@
 
 	<groupId>org.antonakospanos</groupId>
 	<artifactId>movierama</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
