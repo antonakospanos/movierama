@@ -38,11 +38,14 @@ spring:
     url: "${DB_URL:jdbc:postgresql://rdbms:5432/movierama}"
     username: "${DB_USERNAME:movierama}"
     password: "${DB_PASSWORD:movierama}"
-flyway:
-  enabled: false
-  table: DB_MIGRATION_HISTORY
-  sqlMigrationSuffix: .sql
-  schemas: public
+  flyway:
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#data-migration-properties
+    enabled: false
+    sqlMigrationSuffix: .sql
+    validate-on-migrate: false
+    table: DB_MIGRATION_HISTORY
+    baselineOnMigrate: true
+    schemas: public
 application:
   roles:
     admin:
