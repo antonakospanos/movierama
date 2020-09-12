@@ -70,12 +70,8 @@
                 $rootScope.$apply();
         };
 
-        // Add Configuration on $rootScope
-        var config = YAML.load('app/conf/params.yml');
-        $rootScope.backend_protocol = config.backend_protocol;
-        $rootScope.backend_ip = config.backend_ip;
-        $rootScope.backend_port = config.backend_port;
-        $rootScope.backend_context_path = config.backend_context_path;
+        // Add Backend API URL on $rootScope
+        $rootScope.backend_api = window.location.origin
 
         /**
          * Keep user logged in after page refresh!

@@ -12,7 +12,7 @@ COPY src/main/resources/ssl/movierama.keystore $CATALINA_HOME/conf/localhost-rsa
 COPY src/conf/tomcat/server.xml $CATALINA_HOME/conf/server.xml
 COPY src/conf/tomcat/tomcat-users.xml $CATALINA_HOME/conf/tomcat-users.xml
 COPY src/conf/tomcat/setenv.sh $CATALINA_HOME/bin/setenv.sh
-COPY --from=build-stage /usr/src/myapp/target/movierama*.war $CATALINA_HOME/webapps/movierama.war
+COPY --from=build-stage /usr/src/myapp/target/movierama*.jar $CATALINA_HOME/webapps/movierama.jar
 
 # Add env variables
 ENV SPRING_CONFIG_LOCATION $CATALINA_HOME/conf/

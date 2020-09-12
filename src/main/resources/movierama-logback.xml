@@ -7,12 +7,12 @@
     </appender>
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/applogs/movierama/movierama.log</file>
+        <file>${LOG_PATH:-log/}movierama.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>/applogs/movierama/movierama-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-            <!-- keep 20 days worth of history -->
+            <fileNamePattern>${LOG_PATH:-log/}movierama-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <!-- keep 2 days worth of history -->
             <maxHistory>2</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -23,15 +23,15 @@
 
     <!-- enable these for debugging -->
     <!--<logger name="org.springframework" level="debug"/>-->
-    <logger name="org.hibernate.SQL" level="debug"/>
+    <!--<logger name="org.hibernate.SQL" level="debug"/>-->
 
     <logger name="org.antonakospanos.movierama" level="debug" additivity="false">
-        <!--<appender-ref ref="console"/>-->
-        <appender-ref ref="file"/>
+        <appender-ref ref="console"/>
+        <!--<appender-ref ref="file"/>-->
     </logger>
 
     <root level="info">
-        <!--<appender-ref ref="console"/>-->
-        <appender-ref ref="file"/>
+        <appender-ref ref="console"/>
+        <!--<appender-ref ref="file"/>-->
     </root>
 </configuration>

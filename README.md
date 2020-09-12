@@ -48,3 +48,10 @@ $CATALINA_HOME/bin/startup.sh --Dspring.config.location=/path/to/conf/
 docker build -t movierama .
 docker run -p 8080:8080 -p 443:443 -p 80:80 --name movierama --link rdbms -d movierama
 ```
+##### Application Deployment
+
+Use heroku to deploy the `develop` branch to `https://antonakos-movierama.herokuapp.com` as follows:
+```
+git remote add heroku https://git.heroku.com/antonakos-movierama.git
+git push heroku develop:master
+```
