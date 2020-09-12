@@ -235,7 +235,7 @@
 					<orderFile>ascending</orderFile>
 				</configuration>
 				<executions>
-					<!-- need yearEnd connect with root user yearEnd create database and module user -->
+					<!-- need to connect with root user to create database and module user -->
 					<execution>
 						<id>init-db</id>
 						<phase>validate</phase>
@@ -248,24 +248,6 @@
 								DROP USER IF EXISTS ${db.module.userId};
 								CREATE USER ${db.module.userId} LOGIN PASSWORD '${db.module.password}' NOCREATEDB NOCREATEROLE NOREPLICATION VALID UNTIL 'infinity';
 								CREATE DATABASE ${db.module.database.name} WITH ENCODING='UTF8' ${db.create_db_extra} OWNER=${db.module.userId} CONNECTION LIMIT=-1;
-							</sqlCommand>
-							<skip>${init.database.skip}</skip>
-						</configuration>
-						<inherited>false</inherited>
-					</execution>
-					<!-- need yearEnd connect with module user in order yearEnd create schema in module database -->
-					<execution>
-						<id>init-db-schema</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>${db.module.url}</url>
-							<username>${db.module.userId}</username>
-							<password>${db.module.password}</password>
-							<sqlCommand>
-								CREATE SCHEMA movierama AUTHORIZATION ${db.module.userId};
 							</sqlCommand>
 							<skip>${init.database.skip}</skip>
 						</configuration>
@@ -288,7 +270,7 @@
 					<table>DB_MIGRATION_HISTORY</table>
 					<outOfOrder>true</outOfOrder>
 					<schemas>
-						<schema>movierama</schema>
+						<schema>public</schema>
 					</schemas>
 				</configuration>
 				<dependencies>

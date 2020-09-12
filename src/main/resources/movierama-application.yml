@@ -20,11 +20,11 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: create # create | update | validate | create-drop
+      ddl-auto: update # create | update | validate | create-drop
     properties:
       net.sf.ehcache.configurationResourceName: movierama-ehcache.xml
       hibernate:
-        default_schema: movierama
+        default_schema: public
         show_sql: false
         generate_statistics: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -35,14 +35,14 @@ spring:
           use_second_level_cache: true
           region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
   datasource:
-    url: "${DB_URL:jdbc:postgresql://rdbms:5432/movierama}?currentSchema=movierama"
+    url: "${DB_URL:jdbc:postgresql://rdbms:5432/movierama}"
     username: "${DB_USERNAME:movierama}"
     password: "${DB_PASSWORD:movierama}"
 flyway:
   enabled: false
   table: DB_MIGRATION_HISTORY
   sqlMigrationSuffix: .sql
-  schemas: movierama
+  schemas: public
 application:
   roles:
     admin:

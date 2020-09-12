@@ -1,6 +1,3 @@
-CREATE SCHEMA movierama;
-SET search_path TO movierama;
-
 create table "user"
 (
   id          bigserial not null

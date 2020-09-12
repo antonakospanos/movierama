@@ -1,0 +1,1 @@
+-- SQL script creating tables (on the already created database and schema) on startup by Spring Boot
